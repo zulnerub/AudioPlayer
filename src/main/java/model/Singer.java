@@ -15,10 +15,6 @@ public class Singer {
         songs.add(song);
     }
 
-    public List<Song> getSongs(){
-        return songs;
-    }
-
     public String getName(){
         return name;
     }

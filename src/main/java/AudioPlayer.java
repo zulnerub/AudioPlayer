@@ -72,12 +72,14 @@ public class AudioPlayer {
         System.out.println(info());
 
         System.out.println("Input song title:");
-        getSingerBySongTitle(bufferedReader.readLine().trim());
+        System.out.println(getSingerBySongTitle(bufferedReader.readLine().trim()));
 
         System.out.println("Please input Singer name:");
-        getSongsOfSinger(bufferedReader.readLine().trim());
+        System.out.println(getSongsOfSinger(bufferedReader.readLine().trim()));
 
         System.out.println("There are: " + getCountOfAllListedSongs() + " songs in the list.");
+
+        System.out.println(removeSongFromPlayList(2));
 
     }
 
@@ -178,6 +180,7 @@ public class AudioPlayer {
         addSongToPlaylist(bojeChuvajJaOdZlo);
         addSongToPlaylist(unknown);
 
+
     }
 
     public static String getSingerBySongTitle(String songTitle) {
@@ -210,8 +213,13 @@ public class AudioPlayer {
         return songs.size();
     }
 
-    public static void removeSongFromPlayList(Song song) {
-        songs.remove(song);
+    public static String removeSongFromPlayList(int index) {
+        if (index >= 0 && index < songs.size()) {
+            songs.remove(index);
+            return "Song removed.";
+        }
+
+        return "Provided index is not valid. Please add valid index.";
     }
 
     public static void addSongToPlaylist(Song song) {
