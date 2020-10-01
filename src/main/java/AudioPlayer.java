@@ -1,15 +1,17 @@
-import model.AudioPlayer;
 import model.Author;
 import model.Singer;
 import model.Song;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static enumeration.Genre.*;
 
-public class Application {
-    private static AudioPlayer audioPlayer = new AudioPlayer();
+public class AudioPlayer {
+    private static List<Song> songs = new ArrayList<>();
 
     public static void main(String[] args) {
         init();
@@ -23,7 +25,7 @@ public class Application {
         while (!userInput.equals("7")) {
             switch (userInput) {
                 case "1":
-                    System.out.println(audioPlayer.playSongsInOrderOfAppearance());
+                    playSongsInOrderOfAppearance();
                     break;
 
                 case "2":
@@ -94,10 +96,68 @@ public class Application {
 
         Song unknown = new Song(null, null, null, "", 0);
 
-        audioPlayer.addSongToPlaylist(getYourFreakOn);
-        audioPlayer.addSongToPlaylist(prituriSaPlaninata);
-        audioPlayer.addSongToPlaylist(bojeChuvajJaOdZlo);
-        audioPlayer.addSongToPlaylist(unknown);
+        addSongToPlaylist(getYourFreakOn);
+        addSongToPlaylist(prituriSaPlaninata);
+        addSongToPlaylist(bojeChuvajJaOdZlo);
+        addSongToPlaylist(unknown);
 
+    }
+
+    public static void playSongsInOrderOfAppearance(){
+
+
+        songs.forEach(s -> {
+            System.out.println("Now playing:\n\t* ");
+            System.out.println(s.getShortInfo());
+
+        });
+
+    }
+
+    public String getSingerBySongTitle(String songTitle) {
+        String result = "Song not found!\n";
+        String singerName;
+        int songIndex;
+
+        Song foundSong = songs.stream()
+                .filter(s -> s.getTitle().equals(songTitle))
+                .collect(Collectors.toList())
+                .get(0);
+
+        if (foundSong != null) {
+            singerName = foundSong.getSinger().getName();
+            songIndex = songs.indexOf(foundSong);
+            result = "Singer name: " + singerName +
+                    "\nPosition in playlist: " + songIndex + "\n";
+        }
+        return result;
+    }
+
+
+    public List<Song> getSongsOfSinger(Singer singer) {
+        return songs.stream()
+                .filter(s -> s.getSinger().equals(singer))
+                .collect(Collectors.toList());
+    }
+
+    public int getCountOfAllListedSongs() {
+        return songs.size();
+    }
+
+    public static void removeSongFromPlayList(Song song) {
+        songs.remove(song);
+    }
+
+    public static void addSongToPlaylist(Song song) {
+        if (song != null) {
+            songs.add(song);
+        } else {
+            System.out.println("Please add a valid song.");
+        }
+    }
+
+    public String info() {
+        return "AudioPlayer class characteristics:" +
+                "\n\t*\tSongs - list of songs\n";
     }
 }
