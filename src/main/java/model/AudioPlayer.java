@@ -6,10 +6,21 @@ import java.util.stream.Collectors;
 
 public class AudioPlayer {
     List<Song> songs = new ArrayList<>();
-    List<Author> authors = new ArrayList<>();
-    List<Singer> singers = new ArrayList<>();
 
     public AudioPlayer() {
+    }
+
+    public String playSongsInOrderOfAppearance(){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        songs.forEach(s -> {
+            stringBuilder.append("Now playing:\n\t* ");
+            stringBuilder.append(s.getShortInfo());
+        });
+
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 
     public String getSingerBySongTitle(String songTitle) {
@@ -55,9 +66,7 @@ public class AudioPlayer {
     }
 
     public String info() {
-        return "Class info:" +
-                "\n\t*\tSongs - list of songs" +
-                "\n\t*\tAuthors - list of authors" +
-                "\n\t*\tSingers - list of singers\n";
+        return "AudioPlayer class characteristics:" +
+                "\n\t*\tSongs - list of songs\n";
     }
 }

@@ -29,7 +29,7 @@ public class Song {
 
     public String getShortInfo(){
         return "Song title: " + title +
-                "\nSong Author: " + author.getName();
+                "\n\t  Song Author: " + author.getName();
     }
 
     @Override
