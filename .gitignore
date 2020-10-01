@@ -1,0 +1,7 @@
+#ignoring all files with .class extension
+**/*.class
+#ignoring all directories named .idea
+**/.idea/
+#ignoring files with matching name and filepath: (listed below)
+Songs/Songs.iml
+Songs/pom.xml
