@@ -1,7 +1,7 @@
 package enumeration;
 
 public enum Genre {
-    ROCK("rock"),
+    COUNTRY("country"),
     POP("pop"),
     RAP("rap"),
     DEFAULT("default");
