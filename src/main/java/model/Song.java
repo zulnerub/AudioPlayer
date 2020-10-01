@@ -19,6 +19,10 @@ public class Song {
         this.timing = timing < 1 ? 1 : timing;
     }
 
+    public int getTiming(){
+        return timing;
+    }
+
     public String getTitle(){
         return title;
     }
@@ -29,7 +33,7 @@ public class Song {
 
     public String getShortInfo(){
         return "Song title: " + title +
-                "\n\t  Song Author: " + author.getName();
+                "\n\t   Song Author: " + author.getName();
     }
 
     @Override
@@ -42,7 +46,7 @@ public class Song {
                 "\n\tDuration: " + getDuration() + "\n";
     }
 
-    private String getDuration() {
+    public String getDuration() {
         String result = "";
 
         if (timing >= 3600){

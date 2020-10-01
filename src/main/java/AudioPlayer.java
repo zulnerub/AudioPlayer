@@ -3,59 +3,136 @@ import model.Singer;
 import model.Song;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import static enumeration.Genre.*;
 
 public class AudioPlayer {
     private static List<Song> songs = new ArrayList<>();
+    private static Song currentSong = null;
+    private static BufferedReader bufferedReader;
+    private static String userInput;
+    private static boolean receivedInputWhilePlaying = false;
+    private static boolean isPaused = false;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
         init();
-
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println(getListOfCommands());
 
-        String userInput = getUserInput(scanner);
+        userInput = getUserInput(bufferedReader);
 
         while (!userInput.equals("7")) {
             switch (userInput) {
                 case "1":
-                    playSongsInOrderOfAppearance();
+                    play(0);
                     break;
 
                 case "2":
-
+                    stop();
                     break;
 
                 case "3":
-
+                    pause();
                     break;
 
                 case "4":
-
+                    next();
                     break;
 
                 case "5":
-
+                    previous();
                     break;
 
                 case "6":
-
+                    shuffle();
                     break;
 
                 default:
                     System.out.println("Please enter a valid command\n");
                     break;
             }
-            System.out.println(getListOfCommands());
-            userInput = getUserInput(scanner);
+            if (!receivedInputWhilePlaying) {
+                System.out.println(getListOfCommands());
+                userInput = getUserInput(bufferedReader);
+            } else {
+                receivedInputWhilePlaying = false;
+            }
+
         }
 
+        System.out.println(info());
+
+        System.out.println("Input song title:");
+        getSingerBySongTitle(bufferedReader.readLine().trim());
+
+        System.out.println("Please input Singer name:");
+        getSongsOfSinger(bufferedReader.readLine().trim());
+
+        System.out.println("There are: " + getCountOfAllListedSongs() + " songs in the list.");
+
+    }
+
+    private static void shuffle() throws IOException {
+        Collections.shuffle(songs);
+        play(0);
+    }
+
+    public static void previous() throws IOException {
+        int previousSongIndex = (songs.indexOf(currentSong) - 1) < 0 ?
+                songs.size() - 1 : songs.indexOf(currentSong) - 1;
+        play(previousSongIndex);
+    }
+
+    public static void next() throws IOException {
+        int nextSongIndex = (songs.indexOf(currentSong) + 1) > songs.size() ?
+                1 : songs.indexOf(currentSong) + 1;
+        play(nextSongIndex);
+    }
+
+    public static void stop() {
+        currentSong = null;
+        isPaused = false;
+    }
+
+    public static void pause() {
+        isPaused = true;
+    }
+
+    public static void play(int index) throws IOException {
+        int startIndex = isPaused ? songs.indexOf(currentSong) : index;
+        isPaused = false;
+
+        for (; startIndex < songs.size(); startIndex++) {
+            currentSong = songs.get(startIndex);
+
+            System.out.print("Now playing: " + (songs.indexOf(currentSong) + 1) + "\n\t* ");
+            System.out.println(currentSong.getShortInfo());
+
+            try {
+                Thread.sleep(currentSong.getTiming() * 10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (bufferedReader.ready()) {
+                int input = Integer.parseInt(getUserInput(bufferedReader));
+
+                if (input >= 1 && input < 7) {
+                    receivedInputWhilePlaying = true;
+                    userInput = "" + input;
+                    break;
+                }
+            }
+        }
 
     }
 
@@ -70,8 +147,8 @@ public class AudioPlayer {
                 "\t 7 \tExit\n";
     }
 
-    private static String getUserInput(Scanner scanner) {
-        return scanner.nextLine().trim();
+    private static String getUserInput(BufferedReader bufferedReader) throws IOException {
+        return bufferedReader.readLine().trim();
     }
 
     private static void init() {
@@ -103,24 +180,13 @@ public class AudioPlayer {
 
     }
 
-    public static void playSongsInOrderOfAppearance(){
-
-
-        songs.forEach(s -> {
-            System.out.println("Now playing:\n\t* ");
-            System.out.println(s.getShortInfo());
-
-        });
-
-    }
-
-    public String getSingerBySongTitle(String songTitle) {
+    public static String getSingerBySongTitle(String songTitle) {
         String result = "Song not found!\n";
         String singerName;
         int songIndex;
 
         Song foundSong = songs.stream()
-                .filter(s -> s.getTitle().equals(songTitle))
+                .filter(s -> s.getTitle().contains(songTitle))
                 .collect(Collectors.toList())
                 .get(0);
 
@@ -134,13 +200,13 @@ public class AudioPlayer {
     }
 
 
-    public List<Song> getSongsOfSinger(Singer singer) {
+    public static List<Song> getSongsOfSinger(String singerName) {
         return songs.stream()
-                .filter(s -> s.getSinger().equals(singer))
+                .filter(s -> s.getSinger().getName().contains(singerName))
                 .collect(Collectors.toList());
     }
 
-    public int getCountOfAllListedSongs() {
+    public static int getCountOfAllListedSongs() {
         return songs.size();
     }
 
@@ -156,7 +222,7 @@ public class AudioPlayer {
         }
     }
 
-    public String info() {
+    public static String info() {
         return "AudioPlayer class characteristics:" +
                 "\n\t*\tSongs - list of songs\n";
     }
