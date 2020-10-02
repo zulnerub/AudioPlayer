@@ -34,12 +34,15 @@ public class Application {
         System.out.println("Input song title:");
         System.out.println(getSingerPositionInPlaylist(audioPlayer.getUserInput()));
 
-        System.out.println("Please input Singer name:");
-        List<Song> result = getSongsOfAuthor(audioPlayer.getUserInput());
-        if (result != null){
-            result.forEach(s -> System.out.println(s.getShortInfo()));
-        }
+        System.out.println("Please input full Author name:");
 
+        List<Song> result = getSongsOfAuthor(audioPlayer.getUserInput());
+
+        if (result != null) {
+            result.forEach(s -> System.out.println(s.getShortInfo()));
+        } else {
+            System.out.println("Author not found.");
+        }
 
         System.out.println("There are: " + getCountOfAllListedSongs() + " songs in the list.");
 
