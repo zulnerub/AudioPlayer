@@ -22,6 +22,7 @@ public class AudioPlayer {
     private String userInput;
     private boolean hasNewInput = false;
     private boolean isPaused = false;
+    private int timeTheSongWasPaused = 0;
 
     public AudioPlayer() {
     }
@@ -113,7 +114,6 @@ public class AudioPlayer {
      */
     private void play() throws IOException {
         int startIndex = isPaused ? currentSongIndex : INDEX_OF_FIRST_SONG;
-        isPaused = false;
 
         play(startIndex);
     }
@@ -131,10 +131,10 @@ public class AudioPlayer {
             System.out.print("Now playing: " + (currentSongIndex + 1) + "\n\t* ");
             System.out.println(playList.get(currentSongIndex).getShortInfo());
 
-            songIsPlaying();
+            songIsPlaying(playList.get(currentSongIndex).getTiming());
 
-            if (bufferedReader.ready()) {
-                if (isInputValid()) break;
+            if (hasNewInput) {
+                break;
             }
         }
 
@@ -164,12 +164,30 @@ public class AudioPlayer {
 
     /**
      * Delays the program until the song ends.
+     *
+     * @param timing Duration of the song in seconds.
      */
-    private void songIsPlaying() {
-        try {
-            Thread.sleep(playList.get(currentSongIndex).getTiming() * 10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void songIsPlaying(int timing) throws IOException {
+        int startSongFromTime = 1;
+        if (isPaused) {
+            startSongFromTime = timeTheSongWasPaused;
+            isPaused = false;
+        }
+        for (; startSongFromTime <= timing; startSongFromTime++) {
+            System.out.println(startSongFromTime);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (bufferedReader.ready()) {
+                if (isInputValid()) {
+                    timeTheSongWasPaused = startSongFromTime;
+                    return;
+                }
+            }
         }
     }
 
