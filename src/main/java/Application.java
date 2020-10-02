@@ -2,8 +2,10 @@ import model.Author;
 import model.Song;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import static enumeration.Genre.*;
 
@@ -16,6 +18,7 @@ import static enumeration.Genre.*;
 public class Application {
     private static final AudioPlayer audioPlayer = new AudioPlayer();
     private static final String SINGER_NOT_FOUND_MESSAGE = "Singer not found!";
+    private static final Map<String, List<Song>> authorRepository = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         init();
@@ -32,7 +35,11 @@ public class Application {
         System.out.println(getSingerPositionInPlaylist(audioPlayer.getUserInput()));
 
         System.out.println("Please input Singer name:");
-        System.out.println(getSongsOfSinger(audioPlayer.getUserInput()));
+        List<Song> result = getSongsOfAuthor(audioPlayer.getUserInput());
+        if (result != null){
+            result.forEach(s -> System.out.println(s.getShortInfo()));
+        }
+
 
         System.out.println("There are: " + getCountOfAllListedSongs() + " songs in the list.");
 
@@ -48,10 +55,19 @@ public class Application {
         Author johnDou = new Author("John  Dou");
         Author koleKolev = new Author("Kole Kolev");
 
+        authorRepository.putIfAbsent(johnDou.getName(), new ArrayList<>());
+        authorRepository.putIfAbsent(koleKolev.getName(), new ArrayList<>());
+
+
         Song getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 533);
         Song prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 745);
         Song bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 451);
         Song unknown = new Song(null, null, "", 0);
+
+        authorRepository.get(johnDou.getName()).add(getYourFreakOn);
+
+        authorRepository.get(koleKolev.getName()).add(prituriSaPlaninata);
+        authorRepository.get(koleKolev.getName()).add(bojeChuvajJaOdZlo);
 
         System.out.println(addSongToPlaylist(getYourFreakOn));
         System.out.println(addSongToPlaylist(prituriSaPlaninata));
@@ -89,13 +105,11 @@ public class Application {
     /**
      * Gathering a list of songs that match the criteria.
      *
-     * @param singerName String - string that is checked if it is contained in any singer name.
+     * @param authorName String - string that is checked if it is contained in any singer name.
      * @return String representation of the found songs of the singer.
      */
-    private static List<Song> getSongsOfSinger(String singerName) {
-        return audioPlayer.getPlayList().stream()
-                .filter(s -> s.getAuthor().getName().contains(singerName))
-                .collect(Collectors.toList());
+    private static List<Song> getSongsOfAuthor(String authorName) {
+        return authorRepository.get(authorName);
     }
 
     /**
