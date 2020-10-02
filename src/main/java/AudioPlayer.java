@@ -16,8 +16,9 @@ public class AudioPlayer {
     private static final String INVALID_COMMAND_MESSAGE = "Please enter a valid command.";
     private static final String EXIT_AUDIO_PLAYER_COMMAND = "7";
     private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    private static final int INDEX_OF_FIRST_SONG = 0;
     private final List<Song> playList = new ArrayList<>();
-    private Song currentSong = null;
+    private int currentSongIndex = 0;
     private String userInput;
     private boolean hasNewInput = false;
     private boolean isPaused = false;
@@ -67,7 +68,7 @@ public class AudioPlayer {
     private void executeUserCommand() throws IOException {
         switch (userInput) {
             case "1":
-                play(0);
+                play();
                 break;
 
             case "2":
@@ -104,25 +105,31 @@ public class AudioPlayer {
     }
 
     /**
-     * Executes the main function of the player. Plays the songs and listens for
-     * user input to interrupt the play accordingly to the user likings.
-     * As well as providing validation to the input to some extend and interrupting
-     * only if the input is relevant.
-     * <p>
+     * Calculates from which index to start playing the player.
+     * Start playing the songs in the order they are in the playlist by calling the overloaded method with the current index.
      * !!! Included Thread.sleep() which may cause problems ....!!!
      *
-     * @param index - The place in the playlist from witch to start the player.
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    private void play(int index) throws IOException {
-        int startIndex = isPaused ? playList.indexOf(currentSong) : index;
+    private void play() throws IOException {
+        int startIndex = isPaused ? currentSongIndex : INDEX_OF_FIRST_SONG;
         isPaused = false;
 
-        for (; startIndex < playList.size(); startIndex++) {
-            currentSong = playList.get(startIndex);
+        play(startIndex);
+    }
 
-            System.out.print("Now playing: " + (playList.indexOf(currentSong) + 1) + "\n\t* ");
-            System.out.println(currentSong.getShortInfo());
+    /**
+     * Plays the songs in the list and prints the current song played.
+     *
+     * @param startIndex - The place in the playlist from witch to start the player.
+     * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
+     */
+    private void play(int startIndex) throws IOException {
+        for (; startIndex < playList.size(); startIndex++) {
+            currentSongIndex = startIndex;
+
+            System.out.print("Now playing: " + (currentSongIndex + 1) + "\n\t* ");
+            System.out.println(playList.get(currentSongIndex).getShortInfo());
 
             songIsPlaying();
 
@@ -143,7 +150,7 @@ public class AudioPlayer {
         String consoleInput = getUserInput();
         int input = 0;
 
-        if (consoleInput != null && !consoleInput.isBlank()){
+        if (consoleInput != null && !consoleInput.isBlank()) {
             input = Integer.parseInt(consoleInput);
         }
 
@@ -160,7 +167,7 @@ public class AudioPlayer {
      */
     private void songIsPlaying() {
         try {
-            Thread.sleep(currentSong.getTiming() * 10);
+            Thread.sleep(playList.get(currentSongIndex).getTiming() * 10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -170,7 +177,7 @@ public class AudioPlayer {
      * Nullifies the status of the player.
      */
     private void stop() {
-        currentSong = null;
+        currentSongIndex = 0;
         isPaused = false;
     }
 
@@ -191,8 +198,8 @@ public class AudioPlayer {
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
     private void next() throws IOException {
-        int nextSongIndex = (playList.indexOf(currentSong) + 1) > playList.size() ?
-                1 : playList.indexOf(currentSong) + 1;
+        int nextSongIndex = (currentSongIndex + 1) > playList.size() ?
+                1 : (currentSongIndex + 1);
         play(nextSongIndex);
     }
 
@@ -204,8 +211,8 @@ public class AudioPlayer {
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
     private void previous() throws IOException {
-        int previousSongIndex = (playList.indexOf(currentSong) - 1) < 0 ?
-                playList.size() - 1 : playList.indexOf(currentSong) - 1;
+        int previousSongIndex = (currentSongIndex - 1) < 0 ?
+                playList.size() - 1 : (currentSongIndex - 1);
         play(previousSongIndex);
     }
 
@@ -233,7 +240,7 @@ public class AudioPlayer {
                 "\t 4 \t" + NEXT + "\n" +
                 "\t 5 \t" + PREVIOUS + "\n" +
                 "\t 6 \t" + SHUFFLE + "\n" +
-                "\t 7 \t"+ EXIT + "\n";
+                "\t 7 \t" + EXIT + "\n";
     }
 
     /**
