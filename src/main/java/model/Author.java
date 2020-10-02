@@ -1,37 +1,30 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * used to create object of type Author with methods to provide
- * the name of the author and to add a song to his collection of songs
+ * Used to instantiate an object that is used in the Song class.
  */
 public class Author {
+    private static final String DEFAULT_AUTHOR_NAME = "no name";
     private String name;
-    private List<Song> songs = new ArrayList<>();
 
     public Author(String name) {
-        this.name = (name.isBlank() || name == null) ? "no name" : name;
+        this.name = getValidAuthorName(name);
     }
 
     /**
-     * takes an object of type Song and adds it to the author's list of songs
-     * @param song Song - object of type Song
-     */
-    public void addSong(Song song){
-        if (song != null) {
-            songs.add(song);
-        } else {
-            System.out.println("Please choose a song.");
-        }
-    }
-
-    /**
+     * Validates the provided value for name.
      *
-     * @return String - gets the name of the author
+     * @param name String input value for field name.
+     * @return Valid value of type String.
      */
-    public String getName(){
+    private String getValidAuthorName(String name) {
+        return (name == null || name.isBlank()) ? DEFAULT_AUTHOR_NAME : name;
+    }
+
+    /**
+     * @return String value of field name.
+     */
+    public String getName() {
         return name;
     }
 }

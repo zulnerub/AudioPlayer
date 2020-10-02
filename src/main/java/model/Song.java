@@ -5,101 +5,177 @@ import enumeration.Genre;
 import static enumeration.Genre.DEFAULT;
 
 /**
- * used to create objects of type song to use in the AudioPlayer
- * contains overridden method toString and other supplementary methods for accessing fields
- *
- *
- * validation of fields made in the constructor
- * allowed for default implementation if wrong input is provided
+ * Stores details about a song.
+ * Validation of fields made in the constructor.
+ * Allowed default implementation if wrong input is provided.
  */
 public class Song {
+    private static final String DEFAULT_TITLE = "no name";
+    private static final int DEFAULT_SONG_TIMING = 1;
     private Author author;
     private Genre genre;
-    private Singer singer;
     private String title;
     private int timing;
 
-    public Song(Author author, Genre genre, Singer singer, String title, int timing) {
-        this.author = author != null ? author : new Author("no author");
-        this.genre = genre == null ? DEFAULT : genre;
-        this.singer = singer != null ? singer : new Singer("no singer");
-        this.title = (title.isBlank() || title == null) ? "no name" : title;
-        this.timing = timing < 1 ? 1 : timing;
+    private static final int LENGTH_OF_HOUR_IN_SECONDS = 3600;
+    private static final int LENGTH_OF_MINUTE_IN_SECONDS = 60;
+
+    public Song(Author author, Genre genre, String title, int timing) {
+        this.author = getValidAuthorName(author);
+        this.genre = getValidGenre(genre);
+        this.title = getValidTitle(title);
+        this.timing = getValidTiming(timing);
     }
 
     /**
+     * Validates the provided int input.
      *
-     * @return int - gets the timing of the song
+     * @param timing Parameter of type int.
+     * @return Valid int parameter.
      */
-    public int getTiming(){
+    private int getValidTiming(int timing) {
+        return timing > 0 ? timing : DEFAULT_SONG_TIMING;
+    }
+
+    /**
+     * Validates the provided String value.
+     *
+     * @param title Parameter of type String.
+     * @return Valid String value.
+     */
+    private String getValidTitle(String title) {
+        return (title != null && !title.isBlank()) ? title : DEFAULT_TITLE;
+    }
+
+    /**
+     * Validates the provided Genre.
+     *
+     * @param genre An instance of enum Genre.
+     * @return Valid instance of Genre.
+     */
+    private Genre getValidGenre(Genre genre) {
+        return genre != null ? genre : DEFAULT;
+    }
+
+    /**
+     * Validates the provided Author.
+     *
+     * @param author An instance of class Author.
+     * @return Valid instance of Author.
+     */
+    private Author getValidAuthorName(Author author) {
+        return author != null ? author : new Author(null);
+    }
+
+    /**
+     * @return The author field of Song.
+     */
+    public Author getAuthor() {
+        return author;
+    }
+
+    /**
+     * @return The timing field of Song.
+     */
+    public int getTiming() {
         return timing;
     }
 
     /**
-     *
-     * @return String - gets the title of the song
+     * @return The title field of Song.
      */
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
     /**
-     *
-     * @return Singer - gets the singer of the song
+     * @return Gets the songs title and author name and formats them.
      */
-    public Singer getSinger(){
-        return singer;
-    }
-
-    /**
-     *
-     * @return String - gets the songs title and author name and formats them
-     */
-    public String getShortInfo(){
+    public String getShortInfo() {
         return "Song title: " + title +
                 "\n\t   Song Author: " + author.getName();
     }
 
     /**
-     * method is overridden to fit individual needs of the application
+     * Method is overridden to fit individual needs of the application.
      *
-     * @return String - representation of info of the song, formatted
+     * @return String - representation of info of the song, formatted.
      */
     @Override
     public String toString() {
         return "Song details:" +
                 "\n\tTitle: " + title +
                 "\n\tGenre: " + genre +
-                "\n\tSinger: " + singer +
                 "\n\tAuthor: " + author.getName() +
                 "\n\tDuration: " + getDuration() + "\n";
     }
 
     /**
-     * uses the timing of the song to format and provide a string representation of the duration of the song
+     * Uses the timing of the song to format and provide
+     * a string representation of the duration of the song.
      *
-     * @return String - calculates and provides the duration of the song
+     * @return String - calculates and provides the duration of the song.
      */
     public String getDuration() {
         String result = "";
 
-        if (timing >= 3600){
-            result += timing / 3600;
-            result += ":";
-        }
+        result += getHoursOfSong(timing);
+        int remainingSeconds = timing % LENGTH_OF_HOUR_IN_SECONDS;
 
-        if (timing >= 60 && timing < 3600){
-            result += "00:";
-            result += (timing % 3600) / 60;
-            result += ":";
-        }
+        result += getMinutesOfSong(remainingSeconds);
 
-        if (timing < 60){
-            result += "00:";
-        }
-
-        result += timing % 60;
+        result += getSecondsOfSong(remainingSeconds);
 
         return result;
+    }
+
+    /**
+     * Calculate and format the seconds of a song.
+     *
+     * @param remainingSeconds The remainder of the song's duration
+     *                         after calculating the hours and the minutes of the song.
+     * @return Formatted String representation of the input pointing to the number of seconds in a song.
+     */
+    private String getSecondsOfSong(int remainingSeconds) {
+        int seconds = remainingSeconds % LENGTH_OF_MINUTE_IN_SECONDS;
+
+        if (seconds == 0) {
+            return "00:";
+        }
+
+        return seconds < 10 ? ("0" + seconds + ":") : (seconds + ":");
+    }
+
+    /**
+     * Calculate and format the minutes in a song.
+     *
+     * @param remainingSeconds The remainder of the song's duration
+     *                         after calculating the hours of the song.
+     * @return Formatted String representation of the input pointing to the number of minutes in a song.
+     */
+    private String getMinutesOfSong(int remainingSeconds) {
+        int minute = (remainingSeconds >= LENGTH_OF_MINUTE_IN_SECONDS) ?
+                (remainingSeconds % LENGTH_OF_MINUTE_IN_SECONDS) : 0;
+        if (minute == 0) {
+            return "00:";
+        }
+
+        return minute < 10 ? ("0" + minute + ":") : (minute + ":");
+    }
+
+    /**
+     * Calculate and format the hours in a song.
+     *
+     * @param timing The duration of the song in seconds.
+     * @return Formatted String representation of the input pointing to the number of hours in a song.
+     */
+    private String getHoursOfSong(int timing) {
+        int hours = timing >= LENGTH_OF_HOUR_IN_SECONDS ? timing / LENGTH_OF_HOUR_IN_SECONDS : 0;
+
+        if (hours == 0) {
+            return "00:";
+        }
+
+        return hours < 10 ? ("0" + hours + ":") : (hours + ":");
     }
 }

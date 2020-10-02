@@ -5,14 +5,8 @@ package enumeration;
  * to compliment the class Song
  */
 public enum Genre {
-    COUNTRY("country"),
-    POP("pop"),
-    RAP("rap"),
-    DEFAULT("default");
-
-    String name;
-
-    Genre(String name){
-        this.name = name;
-    }
+    COUNTRY,
+    POP,
+    RAP,
+    DEFAULT
 }
