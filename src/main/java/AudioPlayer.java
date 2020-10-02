@@ -7,15 +7,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static enumeration.UserCommands.*;
+
 /**
  * This class simulates the behavior/functionality of a real player.
  */
 public class AudioPlayer {
     private static final String INVALID_COMMAND_MESSAGE = "Please enter a valid command.";
     private static final String EXIT_AUDIO_PLAYER_COMMAND = "7";
+    private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private final List<Song> playList = new ArrayList<>();
     private Song currentSong = null;
-    private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private String userInput;
     private boolean hasNewInput = false;
     private boolean isPaused = false;
@@ -23,12 +25,24 @@ public class AudioPlayer {
     public AudioPlayer() {
     }
 
-    public void start() throws IOException {
-        while (!userInput.equals(EXIT_AUDIO_PLAYER_COMMAND)) {
+    public void start(String userInput) throws IOException {
+        this.userInput = userInput;
+
+        while (!this.userInput.equals(EXIT_AUDIO_PLAYER_COMMAND)) {
             executeUserCommand();
 
             hasInput();
         }
+    }
+
+    /**
+     * Handles provided input from the user.
+     *
+     * @return The input of the user.
+     * @throws IOException - In relation to BufferedReader.
+     */
+    public String getUserInput() throws IOException {
+        return bufferedReader.readLine().trim();
     }
 
     /**
@@ -100,7 +114,7 @@ public class AudioPlayer {
      * @param index - The place in the playlist from witch to start the player.
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    public void play(int index) throws IOException {
+    private void play(int index) throws IOException {
         int startIndex = isPaused ? playList.indexOf(currentSong) : index;
         isPaused = false;
 
@@ -126,7 +140,12 @@ public class AudioPlayer {
      * @throws IOException Chaining exception from BufferedReader in userInput.
      */
     private boolean isInputValid() throws IOException {
-        int input = Integer.parseInt(getUserInput());
+        String consoleInput = getUserInput();
+        int input = 0;
+
+        if (consoleInput != null && !consoleInput.isBlank()){
+            input = Integer.parseInt(consoleInput);
+        }
 
         if (input >= 1 && input < 7) {
             hasNewInput = true;
@@ -150,7 +169,7 @@ public class AudioPlayer {
     /**
      * Nullifies the status of the player.
      */
-    public void stop() {
+    private void stop() {
         currentSong = null;
         isPaused = false;
     }
@@ -159,7 +178,7 @@ public class AudioPlayer {
      * Creates indication that the player has been paused so if play is chosen after this
      * it starts from the corresponding song and not from the beginning.
      */
-    public void pause() {
+    private void pause() {
         isPaused = true;
     }
 
@@ -171,7 +190,7 @@ public class AudioPlayer {
      *
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    public void next() throws IOException {
+    private void next() throws IOException {
         int nextSongIndex = (playList.indexOf(currentSong) + 1) > playList.size() ?
                 1 : playList.indexOf(currentSong) + 1;
         play(nextSongIndex);
@@ -184,7 +203,7 @@ public class AudioPlayer {
      *
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    public void previous() throws IOException {
+    private void previous() throws IOException {
         int previousSongIndex = (playList.indexOf(currentSong) - 1) < 0 ?
                 playList.size() - 1 : playList.indexOf(currentSong) - 1;
         play(previousSongIndex);
@@ -208,23 +227,13 @@ public class AudioPlayer {
      */
     public String getListOfCommands() {
         return "Hello. Please chose a command from the following:\n" +
-                "\t 1 \tPlay\n" +
-                "\t 2 \tStop\n" +
-                "\t 3 \tPause\n" +
-                "\t 4 \tNext\n" +
-                "\t 5 \tPrevious\n" +
-                "\t 6 \tShuffle\n" +
-                "\t 7 \tExit\n";
-    }
-
-    /**
-     * Handles provided input from the user.
-     *
-     * @return The input of the user.
-     * @throws IOException - In relation to BufferedReader.
-     */
-    public String getUserInput() throws IOException {
-        return bufferedReader.readLine().trim();
+                "\t 1 \t" + PLAY + "\n" +
+                "\t 2 \t" + STOP + "\n" +
+                "\t 3 \t" + PAUSE + "\n" +
+                "\t 4 \t" + NEXT + "\n" +
+                "\t 5 \t" + PREVIOUS + "\n" +
+                "\t 6 \t" + SHUFFLE + "\n" +
+                "\t 7 \t"+ EXIT + "\n";
     }
 
     /**

@@ -7,6 +7,12 @@ import java.util.stream.Collectors;
 
 import static enumeration.Genre.*;
 
+/**
+ * Starting point of the application.
+ * Initializing the data.
+ * Starting the audio player.
+ * Executing the listed methods after exiting the audio player.
+ */
 public class Application {
     private static final AudioPlayer audioPlayer = new AudioPlayer();
     private static final String SINGER_NOT_FOUND_MESSAGE = "Singer not found!";
@@ -16,7 +22,9 @@ public class Application {
 
         System.out.println(audioPlayer.getListOfCommands());
 
-        audioPlayer.start();
+        String initialInput = audioPlayer.getUserInput();
+
+        audioPlayer.start(initialInput);
 
         System.out.println(info());
 
