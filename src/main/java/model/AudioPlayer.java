@@ -173,6 +173,7 @@ public class AudioPlayer {
         int startSongFromTime = 1;
         if (isPaused) {
             startSongFromTime = timeTheSongWasPaused;
+            invalidatePause();
             isPaused = false;
         }
         for (; startSongFromTime <= timing; startSongFromTime++) {
@@ -197,7 +198,7 @@ public class AudioPlayer {
      * Nullifies the status of the player.
      */
     private void stop() {
-        currentSongIndex = 0;
+        invalidatePause();
         isPaused = false;
     }
 
@@ -218,6 +219,7 @@ public class AudioPlayer {
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
     private void next() throws IOException {
+        invalidatePause();
         int nextSongIndex = (currentSongIndex + 1) > playList.size() ?
                 1 : (currentSongIndex + 1);
         play(nextSongIndex);
@@ -231,6 +233,7 @@ public class AudioPlayer {
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
     private void previous() throws IOException {
+        invalidatePause();
         int previousSongIndex = (currentSongIndex - 1) < 0 ?
                 playList.size() - 1 : (currentSongIndex - 1);
         play(previousSongIndex);
@@ -243,8 +246,14 @@ public class AudioPlayer {
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
     private void shuffle() throws IOException {
+        invalidatePause();
         Collections.shuffle(playList);
         play(0);
+    }
+
+    private void invalidatePause(){
+        timeTheSongWasPaused = 1;
+        currentSongIndex = 0;
     }
 
     /**

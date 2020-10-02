@@ -62,10 +62,9 @@ public class Application {
         authorRepository.putIfAbsent(johnDou.getName(), new ArrayList<>());
         authorRepository.putIfAbsent(koleKolev.getName(), new ArrayList<>());
 
-
-        Song getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 533);
-        Song prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 745);
-        Song bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 451);
+        Song getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 20);
+        Song prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 20);
+        Song bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 20);
         Song unknown = new Song(null, null, "", 0);
 
         authorRepository.get(johnDou.getName()).add(getYourFreakOn);

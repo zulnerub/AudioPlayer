@@ -1,0 +1,6 @@
+enumeration\Genre.class
+model\Author.class
+model\Song.class
+Application.class
+enumeration\UserCommands.class
+model\AudioPlayer.class
