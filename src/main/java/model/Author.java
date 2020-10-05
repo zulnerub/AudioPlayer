@@ -1,6 +1,6 @@
 package model;
 
-import static exceptions.CustomExceptions.invalidArgumentException;
+import static model.CustomExceptions.invalidArgumentException;
 
 /**
  * Used to instantiate an object that is used in the Song class.

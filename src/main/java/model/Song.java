@@ -1,7 +1,6 @@
 package model;
 
-import enumeration.Genre;
-import static exceptions.CustomExceptions.*;
+import static model.CustomExceptions.*;
 
 /**
  * Stores details about a song.

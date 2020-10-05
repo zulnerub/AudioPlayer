@@ -3,7 +3,7 @@ import model.Song;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static enumeration.Genre.*;
+import static model.Genre.*;
 
 public class SongClassUnitTests {
     private static final String INVALID_TITLE_NAME_MESSAGE = "The title cannot be empty.";

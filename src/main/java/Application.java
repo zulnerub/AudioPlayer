@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static enumeration.Genre.*;
+import static model.Genre.*;
 
 /**
  * Starting point of the application.
@@ -17,9 +17,10 @@ import static enumeration.Genre.*;
  * Executing the listed methods after exiting the audio player.
  */
 public class Application {
-    private static final AudioPlayer audioPlayer = new AudioPlayer();
+    private static AudioPlayer audioPlayer;
     private static final String SINGER_NOT_FOUND_MESSAGE = "Singer not found!";
     private static final Map<String, List<Song>> authorRepository = new HashMap<>();
+    private static final List<Song> songsToBePlayed = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         init();
@@ -69,6 +70,14 @@ public class Application {
             koleKolev = new Author("Kole Kolev");
         } catch (IllegalArgumentException exception) {
             System.out.println(exception.getMessage());
+        }
+
+        Author nullNameAuthor = null;
+
+        try {
+            nullNameAuthor = new Author(null);
+        } catch (NullPointerException nullPointerException) {
+            System.out.println(nullPointerException.getMessage());
         }
 
         authorRepository.putIfAbsent(johnDou.getName(), new ArrayList<>());
@@ -134,6 +143,7 @@ public class Application {
         System.out.println(addSongToPlaylist(prituriSaPlaninata));
         System.out.println(addSongToPlaylist(bojeChuvajJaOdZlo));
 
+        audioPlayer = new AudioPlayer(songsToBePlayed);
 
     }
 
@@ -213,7 +223,7 @@ public class Application {
      */
     private static String addSongToPlaylist(Song song) {
         if (song != null) {
-            audioPlayer.getPlayList().add(song);
+            songsToBePlayed.add(song);
             return "Song: " + song.getTitle() + " added to playlist.";
         } else {
             return "Song not added.";

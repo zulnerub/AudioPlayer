@@ -1,4 +1,4 @@
-package enumeration;
+package model;
 
 /**
  * Stores values for the field genre in class Song.
@@ -6,6 +6,5 @@ package enumeration;
 public enum Genre {
     COUNTRY,
     POP,
-    RAP,
-    DEFAULT
+    RAP
 }

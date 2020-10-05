@@ -1,4 +1,4 @@
-package enumeration;
+package model;
 
 /**
  * Stores values for user commands in class model.AudioPlayer.

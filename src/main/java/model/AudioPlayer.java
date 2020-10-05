@@ -3,11 +3,10 @@ package model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static enumeration.UserCommands.*;
+import static model.UserCommands.*;
 
 /**
  * This class simulates the behavior/functionality of a real player.
@@ -18,14 +17,15 @@ public class AudioPlayer {
     private static final String INVALID_PLAY_LIST = "There are no songs to play!";
     private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private static final int INDEX_OF_FIRST_SONG = 0;
-    private final List<Song> playList = new ArrayList<>();
+    private final List<Song> playList;
     private int currentSongIndex = 0;
     private String userInput;
     private boolean hasNewInput = false;
     private boolean isPaused = false;
     private int timeTheSongWasPaused = 0;
 
-    public AudioPlayer() {
+    public AudioPlayer(List<Song> playList) {
+        this.playList = playList;
     }
 
     public void start(String userInput) throws IOException {
