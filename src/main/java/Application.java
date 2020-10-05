@@ -37,10 +37,10 @@ public class Application {
 
         System.out.println("Please input full Author name:");
 
-        List<Song> result = getSongsOfAuthor(audioPlayer.getUserInput());
+        List<Song> foundSongsOfAuthor = getSongsOfAuthor(audioPlayer.getUserInput());
 
-        if (result != null) {
-            result.forEach(s -> System.out.println(s.getShortInfo()));
+        if (foundSongsOfAuthor != null && !foundSongsOfAuthor.isEmpty()) {
+            foundSongsOfAuthor.forEach(s -> System.out.println(s.getShortInfo()));
         } else {
             System.out.println("Author not found.");
         }
@@ -110,9 +110,11 @@ public class Application {
      *
      * @param authorName String - string that is checked if it is contained in any singer name.
      * @return String representation of the found songs of the singer.
+     *          or empty list if no songs are found.
      */
     private static List<Song> getSongsOfAuthor(String authorName) {
-        return authorRepository.get(authorName);
+        List<Song> foundSongs = authorRepository.get(authorName);
+        return !foundSongs.isEmpty() ? foundSongs : new ArrayList<>();
     }
 
     /**

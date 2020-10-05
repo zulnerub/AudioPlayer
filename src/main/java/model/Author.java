@@ -18,7 +18,7 @@ public class Author {
      * @return Valid value of type String.
      */
     private String getValidAuthorName(String name) {
-        return (name == null || name.isBlank()) ? DEFAULT_AUTHOR_NAME : name;
+       return (name == null || name.isBlank()) ? DEFAULT_AUTHOR_NAME : name;
     }
 
     /**
