@@ -56,16 +56,74 @@ public class Application {
      * - enlists songs in the playlist for the AudioPlayer to work with;
      */
     private static void init() {
-        Author johnDou = new Author("John  Dou");
-        Author koleKolev = new Author("Kole Kolev");
+        Author johnDou = null;
+        Author koleKolev = null;
+
+        try {
+            johnDou = new Author("John  Dou");
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        try {
+            koleKolev = new Author("Kole Kolev");
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
 
         authorRepository.putIfAbsent(johnDou.getName(), new ArrayList<>());
         authorRepository.putIfAbsent(koleKolev.getName(), new ArrayList<>());
 
-        Song getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 20);
-        Song prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 20);
-        Song bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 20);
-        Song unknown = new Song(null, null, "", 0);
+        Song getYourFreakOn = null;
+        Song prituriSaPlaninata = null;
+        Song bojeChuvajJaOdZlo = null;
+
+        try {
+            getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 20);
+        } catch (NullPointerException | IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        try {
+            prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 20);
+        } catch (NullPointerException | IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        try {
+            bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 20);
+        } catch (NullPointerException | IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        Song invalidAuthor = null;
+        Song invalidGenre = null;
+        Song invalidTitle = null;
+        Song invalidTiming = null;
+
+        try {
+            invalidAuthor = new Song(null, POP, "Merry christmas", 50);
+        } catch (NullPointerException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        try {
+            invalidGenre = new Song(koleKolev, null, "Merry christmas", 50);
+        } catch (NullPointerException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        try {
+            invalidTitle = new Song(koleKolev, POP, null, 50);
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        try {
+            invalidTiming = new Song(koleKolev, POP, "Merry christmas", 0);
+        } catch (IllegalArgumentException exception) {
+            System.out.println(exception.getMessage());
+        }
 
         authorRepository.get(johnDou.getName()).add(getYourFreakOn);
 
@@ -75,7 +133,8 @@ public class Application {
         System.out.println(addSongToPlaylist(getYourFreakOn));
         System.out.println(addSongToPlaylist(prituriSaPlaninata));
         System.out.println(addSongToPlaylist(bojeChuvajJaOdZlo));
-        System.out.println(addSongToPlaylist(unknown));
+
+
     }
 
     /**
@@ -110,11 +169,11 @@ public class Application {
      *
      * @param authorName String - string that is checked if it is contained in any singer name.
      * @return String representation of the found songs of the singer.
-     *          or empty list if no songs are found.
+     * or empty list if no songs are found.
      */
     private static List<Song> getSongsOfAuthor(String authorName) {
         List<Song> foundSongs = authorRepository.get(authorName);
-        return !foundSongs.isEmpty() ? foundSongs : new ArrayList<>();
+        return foundSongs == null || !foundSongs.isEmpty() ? foundSongs : new ArrayList<>();
     }
 
     /**

@@ -1,10 +1,12 @@
 package model;
 
+import static exceptions.CustomExceptions.invalidArgumentException;
+
 /**
  * Used to instantiate an object that is used in the Song class.
  */
 public class Author {
-    private static final String DEFAULT_AUTHOR_NAME = "no name";
+    private static final String INCORRECT_NAME_PARAMETER = "Provided name for the author cannot be empty or null.";
     private String name;
 
     public Author(String name) {
@@ -16,9 +18,14 @@ public class Author {
      *
      * @param name String input value for field name.
      * @return Valid value of type String.
+     * @throws IllegalArgumentException if parameter is not present or blank.
      */
     private String getValidAuthorName(String name) {
-       return (name == null || name.isBlank()) ? DEFAULT_AUTHOR_NAME : name;
+        if (name ==null || name.isBlank()){
+            invalidArgumentException(INCORRECT_NAME_PARAMETER);
+        }
+
+       return name;
     }
 
     /**

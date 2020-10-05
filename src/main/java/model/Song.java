@@ -1,8 +1,7 @@
 package model;
 
 import enumeration.Genre;
-
-import static enumeration.Genre.DEFAULT;
+import static exceptions.CustomExceptions.*;
 
 /**
  * Stores details about a song.
@@ -10,8 +9,10 @@ import static enumeration.Genre.DEFAULT;
  * Allowed default implementation if wrong input is provided.
  */
 public class Song {
-    private static final String DEFAULT_TITLE = "no name";
-    private static final int DEFAULT_SONG_TIMING = 1;
+    private static final String INVALID_TITLE_NAME_MESSAGE = "The title cannot be empty.";
+    private static final String INVALID_AUTHOR_MESSAGE = "Please provide a valid author for your song.";
+    private static final String INVALID_GENRE_MESSAGE = "Such genre does not exist.";
+    private static final String INVALID_TIMING_MESSAGE = "Please specify timing of the song greater than 0 seconds.";
     private Author author;
     private Genre genre;
     private String title;
@@ -32,9 +33,14 @@ public class Song {
      *
      * @param timing Parameter of type int.
      * @return Valid int parameter.
+     * @throws IllegalArgumentException if the parameter is less than 1.
      */
     private int getValidTiming(int timing) {
-        return timing > 0 ? timing : DEFAULT_SONG_TIMING;
+        if (timing < 1) {
+            invalidArgumentException(INVALID_TIMING_MESSAGE);
+        }
+
+        return timing;
     }
 
     /**
@@ -42,9 +48,14 @@ public class Song {
      *
      * @param title Parameter of type String.
      * @return Valid String value.
+     * @throws IllegalArgumentException if the title is empty or not present.
      */
     private String getValidTitle(String title) {
-        return (title != null && !title.isBlank()) ? title : DEFAULT_TITLE;
+        if (title == null || title.isBlank()){
+            invalidArgumentException(INVALID_TITLE_NAME_MESSAGE);
+        }
+
+        return title;
     }
 
     /**
@@ -52,9 +63,13 @@ public class Song {
      *
      * @param genre An instance of enum Genre.
      * @return Valid instance of Genre.
+     * @throws NullPointerException if provided genre is not present.
      */
     private Genre getValidGenre(Genre genre) {
-        return genre != null ? genre : DEFAULT;
+        if (genre == null){
+            nullArgumentException(INVALID_GENRE_MESSAGE);
+        }
+        return genre;
     }
 
     /**
@@ -62,9 +77,13 @@ public class Song {
      *
      * @param author An instance of class Author.
      * @return Valid instance of Author.
+     * @throws NullPointerException if provided author is null.
      */
     private Author getValidAuthorName(Author author) {
-        return author != null ? author : new Author(null);
+        if (author == null){
+            nullArgumentException(INVALID_AUTHOR_MESSAGE);
+        }
+        return author;
     }
 
     /**
