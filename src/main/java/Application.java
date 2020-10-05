@@ -22,7 +22,7 @@ public class Application {
     private static final Map<String, List<Song>> authorRepository = new HashMap<>();
     private static final List<Song> songsToBePlayed = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         init();
 
         System.out.println(audioPlayer.getListOfCommands());

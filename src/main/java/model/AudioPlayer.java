@@ -28,7 +28,7 @@ public class AudioPlayer {
         this.playList = playList;
     }
 
-    public void start(String userInput) throws IOException {
+    public void start(String userInput) {
         this.userInput = userInput;
 
         while (!this.userInput.equals(EXIT_AUDIO_PLAYER_COMMAND)) {
@@ -42,18 +42,21 @@ public class AudioPlayer {
      * Handles provided input from the user.
      *
      * @return The input of the user.
-     * @throws IOException - In relation to BufferedReader.
+     * @throws CustomException - In relation to BufferedReader.
      */
-    public String getUserInput() throws IOException {
-        return bufferedReader.readLine().trim();
+    public String getUserInput() {
+        try {
+            return bufferedReader.readLine().trim();
+        }catch (IOException exception){
+            throw new CustomException("Invalid input.");
+        }
+
     }
 
     /**
      * Check if there is input. if present validates the input.
-     *
-     * @throws IOException Chained exception from BufferedReader - userInput field.
      */
-    private void hasInput() throws IOException {
+    private void hasInput() {
         if (!hasNewInput) {
             System.out.println(getListOfCommands());
             userInput = getUserInput();
@@ -64,10 +67,8 @@ public class AudioPlayer {
 
     /**
      * Evaluate the given command a execute the corresponding method.
-     *
-     * @throws IOException Chained exception from BufferedReader - userInput field.
      */
-    private void executeUserCommand() throws IOException {
+    private void executeUserCommand() {
         switch (userInput) {
             case "1":
                 play();
@@ -111,9 +112,8 @@ public class AudioPlayer {
      * Start playing the songs in the order they are in the playlist by calling the overloaded method with the current index.
      * !!! Included Thread.sleep() which may cause problems ....!!!
      *
-     * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    private void play() throws IOException {
+    private void play() {
         int startIndex = isPaused ? currentSongIndex : INDEX_OF_FIRST_SONG;
 
         play(startIndex);
@@ -123,10 +123,9 @@ public class AudioPlayer {
      * Plays the songs in the list and prints the current song played.
      *
      * @param startIndex - The place in the playlist from witch to start the player.
-     * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    private void play(int startIndex) throws IOException {
-        if (validatePlaylist()){
+    private void play(int startIndex) {
+        if (validatePlaylist()) {
             return;
         }
 
@@ -163,9 +162,8 @@ public class AudioPlayer {
      * Validate the input.
      *
      * @return Weather the input is valid or not.
-     * @throws IOException Chaining exception from BufferedReader in userInput.
      */
-    private boolean isInputValid() throws IOException {
+    private boolean isInputValid(){
         String consoleInput = getUserInput();
         int input = 0;
 
@@ -186,7 +184,7 @@ public class AudioPlayer {
      *
      * @param timing Duration of the song in seconds.
      */
-    private void songIsPlaying(int timing) throws IOException {
+    private void songIsPlaying(int timing) {
         int startSongFromTime = 1;
         if (isPaused) {
             startSongFromTime = timeTheSongWasPaused;
@@ -202,12 +200,17 @@ public class AudioPlayer {
                 e.printStackTrace();
             }
 
-            if (bufferedReader.ready()) {
-                if (isInputValid()) {
-                    timeTheSongWasPaused = startSongFromTime;
-                    return;
+            try {
+                if (bufferedReader.ready()) {
+                    if (isInputValid()) {
+                        timeTheSongWasPaused = startSongFromTime;
+                        return;
+                    }
                 }
+            }catch (IOException exception){
+                throw new CustomException("BufferedReader was not ready.");
             }
+
         }
     }
 
@@ -232,10 +235,8 @@ public class AudioPlayer {
      * If the index is bigger than the playlist size, starts the playing of the songs from the beginning
      * of the playlist.
      * Simulating continuous execution of the playlist.
-     *
-     * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    private void next() throws IOException {
+    private void next() {
         resetPlaylist();
         int nextSongIndex = (currentSongIndex + 1) > playList.size() ?
                 1 : (currentSongIndex + 1);
@@ -246,10 +247,8 @@ public class AudioPlayer {
      * This method returns the player one index backwards and calls the play method again to start from
      * said index.
      * Simulating continuous execution of the playlist.
-     *
-     * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    private void previous() throws IOException {
+    private void previous() {
         resetPlaylist();
         int previousSongIndex = (currentSongIndex - 1) < 0 ?
                 playList.size() - 1 : (currentSongIndex - 1);
@@ -259,10 +258,8 @@ public class AudioPlayer {
     /**
      * This method takes the current  collection of songs(playlist) and rearranges it randomly.
      * Then with the newly ordered list calls the play method to play songs shuffled.
-     *
-     * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
-    private void shuffle() throws IOException {
+    private void shuffle() {
         resetPlaylist();
         Collections.shuffle(playList);
         play(0);

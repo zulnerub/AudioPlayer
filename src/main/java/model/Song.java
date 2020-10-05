@@ -1,7 +1,5 @@
 package model;
 
-import static model.CustomExceptions.*;
-
 /**
  * Stores details about a song.
  * Validation of fields made in the constructor.
@@ -36,7 +34,7 @@ public class Song {
      */
     private int getValidTiming(int timing) {
         if (timing < 1) {
-            invalidArgumentException(INVALID_TIMING_MESSAGE);
+            throw new CustomException(INVALID_TIMING_MESSAGE);
         }
 
         return timing;
@@ -51,7 +49,7 @@ public class Song {
      */
     private String getValidTitle(String title) {
         if (title == null || title.isBlank()){
-            invalidArgumentException(INVALID_TITLE_NAME_MESSAGE);
+            throw new CustomException(INVALID_TITLE_NAME_MESSAGE);
         }
 
         return title;
@@ -66,7 +64,7 @@ public class Song {
      */
     private Genre getValidGenre(Genre genre) {
         if (genre == null){
-            nullArgumentException(INVALID_GENRE_MESSAGE);
+            throw new CustomException(INVALID_GENRE_MESSAGE);
         }
         return genre;
     }
@@ -80,7 +78,7 @@ public class Song {
      */
     private Author getValidAuthorName(Author author) {
         if (author == null){
-            nullArgumentException(INVALID_AUTHOR_MESSAGE);
+            throw new CustomException(INVALID_AUTHOR_MESSAGE);
         }
         return author;
     }

@@ -1,6 +1,6 @@
 package model;
 
-import static model.CustomExceptions.invalidArgumentException;
+
 
 /**
  * Used to instantiate an object that is used in the Song class.
@@ -22,7 +22,7 @@ public class Author {
      */
     private String getValidAuthorName(String name) {
         if (name ==null || name.isBlank()){
-            invalidArgumentException(INCORRECT_NAME_PARAMETER);
+            throw new CustomException(INCORRECT_NAME_PARAMETER);
         }
 
        return name;

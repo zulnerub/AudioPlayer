@@ -1,4 +1,5 @@
 import model.Author;
+import model.CustomException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,12 +13,12 @@ public class AuthorClassUnitTests {
         Assert.assertEquals("Simo", testAuthor.getName());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentException_Input_NULL() {
         Author testAuthor = new Author(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentException_Input_EmptyString() {
         Author testAuthor = new Author("");
     }

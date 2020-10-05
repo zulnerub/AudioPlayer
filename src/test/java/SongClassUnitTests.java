@@ -1,4 +1,5 @@
 import model.Author;
+import model.CustomException;
 import model.Song;
 import org.junit.Assert;
 import org.junit.Test;
@@ -63,31 +64,31 @@ public class SongClassUnitTests {
                 "\n\tDuration: 01:01:06\n", testSong.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentExceptionForTitleInput_NULL() {
         Author testAuthor = new Author("Valid Author");
         Song testSong = new Song(testAuthor, POP, null, 3666);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentExceptionForTitleInput_EMPTY() {
         Author testAuthor = new Author("Valid Author");
         Song testSong = new Song(testAuthor, POP, "", 3666);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentExceptionForTimingInput_EMPTY() {
         Author testAuthor = new Author("Valid Author");
         Song testSong = new Song(testAuthor, POP, "Valid title", 0);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentExceptionForGenreInput_NULL() {
         Author testAuthor = new Author("Valid Author");
         Song testSong = new Song(testAuthor, null, "Valid title", 3666);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = CustomException.class)
     public void shouldThrowIllegalArgumentExceptionForAuthorInput_NULL() {
         Song testSong = new Song(null, POP, "Valid title", 3666);
     }
