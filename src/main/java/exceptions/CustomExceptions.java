@@ -1,6 +1,7 @@
 package exceptions;
 
 public class CustomExceptions {
+
     public static Exception invalidArgumentException(String message){
         throw new IllegalArgumentException(message);
     }

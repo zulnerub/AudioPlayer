@@ -159,10 +159,10 @@ public class Song {
         int seconds = remainingSeconds % LENGTH_OF_MINUTE_IN_SECONDS;
 
         if (seconds == 0) {
-            return "00:";
+            return "00";
         }
 
-        return seconds < 10 ? ("0" + seconds + ":") : (seconds + ":");
+        return seconds < 10 ? ("0" + seconds) : String.valueOf(seconds);
     }
 
     /**
@@ -174,7 +174,7 @@ public class Song {
      */
     private String getMinutesOfSong(int remainingSeconds) {
         int minute = (remainingSeconds >= LENGTH_OF_MINUTE_IN_SECONDS) ?
-                (remainingSeconds % LENGTH_OF_MINUTE_IN_SECONDS) : 0;
+                (remainingSeconds / LENGTH_OF_MINUTE_IN_SECONDS) : 0;
         if (minute == 0) {
             return "00:";
         }
