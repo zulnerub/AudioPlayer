@@ -1,7 +1,5 @@
 package model;
 
-import model.Song;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,6 +15,7 @@ import static enumeration.UserCommands.*;
 public class AudioPlayer {
     private static final String INVALID_COMMAND_MESSAGE = "Please enter a valid command.";
     private static final String EXIT_AUDIO_PLAYER_COMMAND = "7";
+    private static final String INVALID_PLAY_LIST = "There are no songs to play!";
     private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private static final int INDEX_OF_FIRST_SONG = 0;
     private final List<Song> playList = new ArrayList<>();
@@ -127,6 +126,8 @@ public class AudioPlayer {
      * @throws IOException - Cascading exception from lower method in relation to BufferedReader.
      */
     private void play(int startIndex) throws IOException {
+        if (validatePlaylist()) return;
+
         for (; startIndex < playList.size(); startIndex++) {
             currentSongIndex = startIndex;
 
@@ -140,6 +141,20 @@ public class AudioPlayer {
             }
         }
 
+    }
+
+    /**
+     * Validates the playlist.
+     *
+     * @return True if valid.
+     * False if invalid. Print message to indicate invalid playlist.
+     */
+    private boolean validatePlaylist() {
+        if (playList.isEmpty()) {
+            System.out.println(INVALID_PLAY_LIST);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -251,7 +266,7 @@ public class AudioPlayer {
         play(0);
     }
 
-    private void invalidatePause(){
+    private void invalidatePause() {
         timeTheSongWasPaused = 1;
         currentSongIndex = 0;
     }
