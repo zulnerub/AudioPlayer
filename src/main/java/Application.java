@@ -2,11 +2,7 @@ import model.AudioPlayer;
 import model.Author;
 import model.Song;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static model.Genre.*;
 
@@ -34,7 +30,7 @@ public class Application {
         System.out.println(info());
 
         System.out.println("Input song title:");
-        System.out.println(getSingerPositionInPlaylist(audioPlayer.getUserInput()));
+        System.out.println(getAuthorPositionInPlaylist(audioPlayer.getUserInput()));
 
         System.out.println("Please input full Author name:");
 
@@ -154,18 +150,17 @@ public class Application {
      * @return String representation of the singer and position of the song or
      * if not found string that singer was not found.
      */
-    private static String getSingerPositionInPlaylist(String songTitle) {
+    private static String getAuthorPositionInPlaylist(String songTitle) {
         String singerName;
         int songIndex;
 
-        Song foundSong = audioPlayer.getPlayList().stream()
+        Optional<Song> foundSong = audioPlayer.getPlayList().stream()
                 .filter(s -> s.getTitle().contains(songTitle))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
 
-        if (foundSong != null) {
-            singerName = foundSong.getAuthor().getName();
-            songIndex = audioPlayer.getPlayList().indexOf(foundSong);
+        if (foundSong.isPresent()) {
+            singerName = foundSong.get().getAuthor().getName();
+            songIndex = audioPlayer.getPlayList().indexOf(foundSong.get());
 
             return "Singer name: " + singerName +
                     "\nPosition in playlist: " + songIndex + "\n";
