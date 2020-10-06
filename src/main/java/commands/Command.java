@@ -1,8 +1,13 @@
 package commands;
 
-import model.AudioPlayer;
+import controllers.AudioPlayerController;
 
+/**
+ * Provides signature for the command classes.
+ */
 public interface Command {
 
-    void action(AudioPlayer audioPlayer);
+    void action(AudioPlayerController audioPlayerController);
+
+    boolean hasToStartAgain();
 }

@@ -1,6 +1,6 @@
 package commands;
 
-import model.AudioPlayer;
+import controllers.AudioPlayerController;
 
 public class PauseCommandImpl implements Command {
 
@@ -9,7 +9,12 @@ public class PauseCommandImpl implements Command {
      * it starts from the corresponding song and not from the beginning.
      */
     @Override
-    public void action(AudioPlayer audioPlayer) {
-        audioPlayer.isPaused = true;
+    public void action(AudioPlayerController audioPlayerController) {
+        audioPlayerController.isPaused = true;
+    }
+
+    @Override
+    public boolean hasToStartAgain() {
+        return false;
     }
 }

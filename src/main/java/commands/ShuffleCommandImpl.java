@@ -1,6 +1,6 @@
 package commands;
 
-import model.AudioPlayer;
+import controllers.AudioPlayerController;
 
 import java.util.Collections;
 
@@ -11,8 +11,13 @@ public class ShuffleCommandImpl implements Command {
      * Then with the newly ordered list calls the play method to play songs shuffled.
      */
     @Override
-    public void action(AudioPlayer audioPlayer) {
-        audioPlayer.resetPlaylist();
-        Collections.shuffle(audioPlayer.playList);
+    public void action(AudioPlayerController audioPlayerController) {
+        audioPlayerController.resetPlaylist();
+        Collections.shuffle(audioPlayerController.getPlaylist());
+    }
+
+    @Override
+    public boolean hasToStartAgain() {
+        return true;
     }
 }

@@ -1,6 +1,6 @@
 package commands;
 
-import model.AudioPlayer;
+import controllers.AudioPlayerController;
 
 public class PreviousCommandImpl implements Command {
 
@@ -10,10 +10,15 @@ public class PreviousCommandImpl implements Command {
      * Simulating continuous execution of the playlist.
      */
     @Override
-    public void action(AudioPlayer audioPlayer) {
-        audioPlayer.resetPlaylist();
-        audioPlayer.isPaused = true;
-        audioPlayer.currentSongIndex = (audioPlayer.currentSongIndex - 1) < 0 ?
-                audioPlayer.playList.size() - 1 : (audioPlayer.currentSongIndex - 1);
+    public void action(AudioPlayerController audioPlayerController) {
+        audioPlayerController.resetPlaylist();
+        audioPlayerController.isPaused = true;
+        audioPlayerController.currentSongIndex = (audioPlayerController.currentSongIndex - 1) < 0 ?
+                audioPlayerController.getCountOfAllListedSongs() - 1 : (audioPlayerController.currentSongIndex - 1);
+    }
+
+    @Override
+    public boolean hasToStartAgain() {
+        return true;
     }
 }
