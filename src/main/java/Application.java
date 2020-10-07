@@ -25,82 +25,57 @@ public class Application {
      */
     private static void init() {
         audioPlayerController = new AudioPlayerController();
-        Author johnDou = null;
-        Author koleKolev = null;
 
-        try {
-            johnDou = new Author("John Dou");
-        } catch (CustomException exception) {
-            System.out.println(exception.getMessage());
-        }
+        Author johnDou;
+        Author koleKolev;
 
-        try {
-            koleKolev = new Author("Kole Kolev");
-        } catch (CustomException exception) {
-            System.out.println(exception.getMessage());
-        }
+        johnDou = new Author("John Dou");
 
-        Author nullNameAuthor = null;
+        koleKolev = new Author("Kole Kolev");
 
-        try {
-            nullNameAuthor = new Author(null);
-        } catch (CustomException exception) {
-            System.out.println(exception.getMessage());
-        }
+        Song getYourFreakOn;
+        Song prituriSaPlaninata;
+        Song bojeChuvajJaOdZlo;
 
-        Song getYourFreakOn = null;
-        Song prituriSaPlaninata = null;
-        Song bojeChuvajJaOdZlo = null;
+        getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 20);
 
-        try {
-            getYourFreakOn = new Song(johnDou, RAP, "Get your freak on", 20);
-        } catch (CustomException exception) {
-            System.out.println(exception.getMessage());
-        }
+        prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 20);
 
-        try {
-            prituriSaPlaninata = new Song(koleKolev, COUNTRY, "Prituri sa planinata", 20);
-        } catch (CustomException exception) {
-            System.out.println(exception.getMessage());
-        }
-
-        try {
-            bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 20);
-        } catch (CustomException exception) {
-            System.out.println(exception.getMessage());
-        }
+        bojeChuvajJaOdZlo = new Song(koleKolev, POP, "Boje chuvaj ja od zlo", 20);
 
         System.out.println("Sample wrong input for validation demonstration purposes:\n");
 
-        Song invalidAuthor = null;
-        Song invalidGenre = null;
-        Song invalidTitle = null;
-        Song invalidTiming = null;
-
         try {
-            invalidAuthor = new Song(null, POP, "Merry christmas", 50);
+            Author nullNameAuthor = new Author(null);
         } catch (CustomException exception) {
             System.out.println(exception.getMessage());
         }
 
         try {
-            invalidGenre = new Song(koleKolev, null, "Merry christmas", 50);
+            Song invalidAuthor = new Song(null, POP, "Merry christmas", 50);
         } catch (CustomException exception) {
             System.out.println(exception.getMessage());
         }
 
         try {
-            invalidTitle = new Song(koleKolev, POP, null, 50);
+            Song invalidGenre = new Song(koleKolev, null, "Merry christmas", 50);
         } catch (CustomException exception) {
             System.out.println(exception.getMessage());
         }
 
         try {
-            invalidTiming = new Song(koleKolev, POP, "Merry christmas", 0);
+            Song invalidTitle = new Song(koleKolev, POP, null, 50);
         } catch (CustomException exception) {
             System.out.println(exception.getMessage());
         }
 
+        try {
+            Song invalidTiming = new Song(koleKolev, POP, "Merry christmas", 0);
+        } catch (CustomException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        System.out.println();
         System.out.println("Adding songs to playlist for demonstration purposes:\n");
 
         System.out.println(audioPlayerController.addSongToPlaylist(getYourFreakOn));
