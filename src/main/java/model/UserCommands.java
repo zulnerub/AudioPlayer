@@ -12,6 +12,10 @@ public enum UserCommands {
     SHUFFLE("shuffle"),
     REMOVE("remove"),
     ADD("add"),
+    INFO("info"),
+    SEARCH_BY_SONG_TITLE("search_by_song_title"),
+    SEARCH_BY_AUTHOR_NAME("search_by_author_name"),
+    PLAYLIST_LENGTH("playlist_length"),
     EXIT("exit");
 
     private final String name;

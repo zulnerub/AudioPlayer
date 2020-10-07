@@ -305,15 +305,19 @@ public class AudioPlayerController {
      */
     private String getListOfCommands() {
         return "Hello. Please chose a command from the following:\n" +
-                "\t 1 \t" + PLAY + "\n" +
-                "\t 2 \t" + STOP + "\n" +
-                "\t 3 \t" + PAUSE + "\n" +
-                "\t 4 \t" + NEXT + "\n" +
-                "\t 5 \t" + PREVIOUS + "\n" +
-                "\t 6 \t" + SHUFFLE + "\n" +
-                "\t 7 \t" + ADD + "\n" +
-                "\t 8 \t" + REMOVE + "\n" +
-                "\t 9 \t" + EXIT + "\n";
+                "\t  1 \t" + PLAY + "\n" +
+                "\t  2 \t" + STOP + "\n" +
+                "\t  3 \t" + PAUSE + "\n" +
+                "\t  4 \t" + NEXT + "\n" +
+                "\t  5 \t" + PREVIOUS + "\n" +
+                "\t  6 \t" + SHUFFLE + "\n" +
+                "\t  7 \t" + ADD + "\n" +
+                "\t  8 \t" + REMOVE + "\n" +
+                "\t  9 \t" + INFO + "\n" +
+                "\t 10 \t" + SEARCH_BY_SONG_TITLE + "\n" +
+                "\t 11 \t" + SEARCH_BY_AUTHOR_NAME + "\n" +
+                "\t 12 \t" + PLAYLIST_LENGTH + "\n" +
+                "\t 13 \t" + EXIT + "\n";
     }
 
     /**
@@ -328,5 +332,9 @@ public class AudioPlayerController {
         availableCommands.put(SHUFFLE, new ShuffleCommandImpl());
         availableCommands.put(REMOVE, new RemoveSongCommand());
         availableCommands.put(ADD, new AddSongCommand());
+        availableCommands.put(INFO, new PrintAudioPlayerInfoCommand());
+        availableCommands.put(SEARCH_BY_SONG_TITLE, new SearchBySongTitle());
+        availableCommands.put(SEARCH_BY_AUTHOR_NAME, new SearchByAuthorName());
+        availableCommands.put(PLAYLIST_LENGTH, new PrintLengthOfPlaylist());
     }
 }

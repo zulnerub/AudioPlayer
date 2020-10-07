@@ -1,8 +1,6 @@
 import controllers.AudioPlayerController;
 import model.*;
 
-import java.util.*;
-
 import static model.Genre.*;
 
 /**
@@ -18,22 +16,6 @@ public class Application {
         init();
 
         audioPlayerController.start();
-
-        System.out.println(audioPlayerController.getAudioPlayerInfo());
-
-        System.out.println("Input song title:");
-        System.out.println(audioPlayerController.getAuthorPositionInPlaylist());
-
-        System.out.println("Please input full Author name:");
-        List<Song> foundSongsOfAuthor = audioPlayerController.getSongsOfAuthor();
-
-        if (foundSongsOfAuthor != null && !foundSongsOfAuthor.isEmpty()) {
-            foundSongsOfAuthor.forEach(s -> System.out.println(s.getShortInfo() + "\n"));
-        } else {
-            System.out.println("Author not found.");
-        }
-
-        System.out.println("There are: " + audioPlayerController.getCountOfAllListedSongs() + " songs in the list.");
     }
 
     /**
