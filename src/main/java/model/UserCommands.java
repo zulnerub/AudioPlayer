@@ -11,6 +11,7 @@ public enum UserCommands {
     PREVIOUS("previous"),
     SHUFFLE("shuffle"),
     REMOVE("remove"),
+    ADD("add"),
     EXIT("exit");
 
     private final String name;

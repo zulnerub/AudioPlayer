@@ -213,7 +213,7 @@ public class AudioPlayerController {
      * @return The input of the user.
      * @throws CustomException - In relation to BufferedReader.
      */
-    private String getUserInput() {
+    public String getUserInput() {
         try {
             return bufferedReader.readLine().trim();
         } catch (IOException exception) {
@@ -311,8 +311,9 @@ public class AudioPlayerController {
                 "\t 4 \t" + NEXT + "\n" +
                 "\t 5 \t" + PREVIOUS + "\n" +
                 "\t 6 \t" + SHUFFLE + "\n" +
-                "\t 7 \t" + REMOVE + "\n" +
-                "\t 8 \t" + EXIT + "\n";
+                "\t 7 \t" + ADD + "\n" +
+                "\t 8 \t" + REMOVE + "\n" +
+                "\t 9 \t" + EXIT + "\n";
     }
 
     /**
@@ -326,5 +327,6 @@ public class AudioPlayerController {
         availableCommands.put(PREVIOUS, new PreviousCommandImpl());
         availableCommands.put(SHUFFLE, new ShuffleCommandImpl());
         availableCommands.put(REMOVE, new RemoveSongCommand());
+        availableCommands.put(ADD, new AddSongCommand());
     }
 }
