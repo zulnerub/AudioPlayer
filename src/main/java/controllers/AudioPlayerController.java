@@ -24,9 +24,10 @@ public class AudioPlayerController {
     private AudioPlayer audioPlayer;
     private Map<UserCommands, Command> availableCommands = new LinkedHashMap<>();
     public String userInput;
-    public int currentSongIndex = 0;
     public boolean isPaused = false;
     public boolean hasNewInput = false;
+    public boolean isShufflePressed = false;
+    public int currentSongIndex = 0;
     public int timeTheSongWasPaused = 0;
 
     public AudioPlayerController(List<Song> playlist) {
@@ -45,14 +46,16 @@ public class AudioPlayerController {
         userInput = getUserInput();
 
         while (!userInput.equalsIgnoreCase(EXIT.getSimpleName())) {
-            if (isInputValidCommand()) {
-                execute(UserCommands.valueOf(userInput.toUpperCase()));
-            }
+            UserCommands command;
 
-            if (availableCommands.get(
-                    UserCommands.valueOf(userInput.toUpperCase())
-                    ).hasToStartAgain()) {
-                execute(UserCommands.valueOf("PLAY"));
+            if (isInputValidCommand()) {
+                command = UserCommands.valueOf(userInput.toUpperCase());
+
+                execute(command);
+
+                if (availableCommands.get(command).hasToStartAgain()) {
+                    execute(PLAY);
+                }
             }
 
             hasInput();
@@ -103,6 +106,7 @@ public class AudioPlayerController {
      * about the state od the audio player, to their initial values.
      */
     public void resetPlaylist() {
+        isShufflePressed = false;
         timeTheSongWasPaused = 1;
         currentSongIndex = 0;
     }

@@ -1,6 +1,10 @@
 package commands;
 
 import controllers.AudioPlayerController;
+import model.Song;
+
+import java.util.List;
+import java.util.Random;
 
 public class PlayCommandImpl implements Command {
     private static final int INDEX_OF_FIRST_SONG = 0;
@@ -22,6 +26,10 @@ public class PlayCommandImpl implements Command {
         boolean validPlaylist = audioPlayerController.getAudioPlayer().isPlaylistValid();
         if (!validPlaylist) {
             return;
+        }
+
+        if (audioPlayerController.isShufflePressed){
+            startIndex = getRandomSongIndex(audioPlayerController.getPlaylist());
         }
 
         for (; startIndex < audioPlayerController.getCountOfAllListedSongs(); startIndex++) {
@@ -48,6 +56,10 @@ public class PlayCommandImpl implements Command {
                 break;
             }
         }
+    }
+
+    private int getRandomSongIndex(List<Song> playlist) {
+        return new Random().nextInt(playlist.size());
     }
 
     @Override
