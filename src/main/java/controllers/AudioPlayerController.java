@@ -67,13 +67,15 @@ public class AudioPlayerController {
      *
      * @param timing Duration of the song in seconds.
      */
-    public void songIsPlaying(int timing) {
+    public void playSong(int timing) {
         int startSongFromTime = 1;
+
         if (isPaused) {
             startSongFromTime = timeTheSongWasPaused;
             resetPlaylist();
             isPaused = false;
         }
+
         for (; startSongFromTime <= timing; startSongFromTime++) {
             System.out.println(startSongFromTime);
 
@@ -93,10 +95,13 @@ public class AudioPlayerController {
             } catch (IOException exception) {
                 throw new CustomException("BufferedReader was not ready.");
             }
-
         }
     }
 
+    /**
+     *
+     * @return String representation of basic info for AudioPlayer class.
+     */
     public String getAudioPlayerInfo() {
         return audioPlayer.info();
     }
@@ -106,6 +111,7 @@ public class AudioPlayerController {
      * about the state od the audio player, to their initial values.
      */
     public void resetPlaylist() {
+        isPaused = false;
         isShufflePressed = false;
         timeTheSongWasPaused = 1;
         currentSongIndex = 0;
@@ -163,6 +169,14 @@ public class AudioPlayerController {
 
     public AudioPlayer getAudioPlayer() {
         return audioPlayer;
+    }
+
+    /**
+     *
+     * @return Gets the song currently being played.
+     */
+    public Song getCurrentSong(){
+        return audioPlayer.getPlayList().get(currentSongIndex);
     }
 
     public List<Song> getPlaylist(){
@@ -283,5 +297,13 @@ public class AudioPlayerController {
                 .stream()
                 .filter(song -> song.getAuthor().getName().contains(authorName))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     *
+     * @return Gets the result of the validation method from AudioPlayer class
+     */
+    public boolean validatePlaylist() {
+        return audioPlayer.isPlaylistValid();
     }
 }

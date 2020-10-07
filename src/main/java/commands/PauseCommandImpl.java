@@ -2,6 +2,9 @@ package commands;
 
 import controllers.AudioPlayerController;
 
+/**
+ * Provides the AudioPlayerController with the functionality to pause the audio player at current time of current song.
+ */
 public class PauseCommandImpl implements Command {
 
     /**
@@ -13,6 +16,10 @@ public class PauseCommandImpl implements Command {
         audioPlayerController.isPaused = true;
     }
 
+    /**
+     *
+     * @return Whether the controller has to execute the play command in the current iteration or not.
+     */
     @Override
     public boolean hasToStartAgain() {
         return false;

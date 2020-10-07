@@ -2,8 +2,9 @@ package commands;
 
 import controllers.AudioPlayerController;
 
-import java.util.Collections;
-
+/**
+ * Provides the AudioPlayerController with the functionality to start playing the songs in the playlist in random order.
+ */
 public class ShuffleCommandImpl implements Command {
 
     /**
@@ -16,6 +17,10 @@ public class ShuffleCommandImpl implements Command {
         audioPlayerController.isShufflePressed = true;
     }
 
+    /**
+     *
+     * @return Whether the controller has to execute the play command in the current iteration or not.
+     */
     @Override
     public boolean hasToStartAgain() {
         return true;

@@ -48,7 +48,7 @@ public class Song {
      * @throws IllegalArgumentException if the title is empty or not present.
      */
     private String getValidTitle(String title) {
-        if (title == null || title.isBlank()){
+        if (title == null || title.isBlank()) {
             throw new CustomException(INVALID_TITLE_NAME_MESSAGE);
         }
 
@@ -63,7 +63,7 @@ public class Song {
      * @throws NullPointerException if provided genre is not present.
      */
     private Genre getValidGenre(Genre genre) {
-        if (genre == null){
+        if (genre == null) {
             throw new CustomException(INVALID_GENRE_MESSAGE);
         }
         return genre;
@@ -77,7 +77,7 @@ public class Song {
      * @throws NullPointerException if provided author is null.
      */
     private Author getValidAuthorName(Author author) {
-        if (author == null){
+        if (author == null) {
             throw new CustomException(INVALID_AUTHOR_MESSAGE);
         }
         return author;

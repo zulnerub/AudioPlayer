@@ -3,7 +3,8 @@ package commands;
 import controllers.AudioPlayerController;
 
 /**
- * Command that operates
+ * Provides the AudioPlayerController with the functionality
+ * to stop the playing of the songs in the playlist of the audio player.
  */
 public class StopCommandImpl implements Command {
 
@@ -17,6 +18,10 @@ public class StopCommandImpl implements Command {
         audioPlayerController.hasNewInput = false;
     }
 
+    /**
+     *
+     * @return Whether the controller has to execute the play command in the current iteration or not.
+     */
     @Override
     public boolean hasToStartAgain() {
         return false;

@@ -13,7 +13,6 @@ public class AudioPlayer {
         this.playList = playList;
     }
 
-
     /**
      * Validates the playlist.
      *

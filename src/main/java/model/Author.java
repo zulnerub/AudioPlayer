@@ -1,7 +1,5 @@
 package model;
 
-
-
 /**
  * Used to instantiate an object that is used in the Song class.
  */
@@ -21,11 +19,11 @@ public class Author {
      * @throws IllegalArgumentException if parameter is not present or blank.
      */
     private String getValidAuthorName(String name) {
-        if (name ==null || name.isBlank()){
+        if (name == null || name.isBlank()) {
             throw new CustomException(INCORRECT_NAME_PARAMETER);
         }
 
-       return name;
+        return name;
     }
 
     /**

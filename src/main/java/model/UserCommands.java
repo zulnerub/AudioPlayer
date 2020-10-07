@@ -18,8 +18,10 @@ public enum UserCommands {
         this.name = name;
     }
 
-    public String getSimpleName(){
+    /**
+     * @return The class member name of the enumeration.
+     */
+    public String getSimpleName() {
         return name;
     }
-
 }

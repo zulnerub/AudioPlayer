@@ -6,6 +6,9 @@ import model.Song;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Provides the AudioPlayerController with the functionality to play the songs in the playlist of the audio player.
+ */
 public class PlayCommandImpl implements Command {
     private static final int INDEX_OF_FIRST_SONG = 0;
 
@@ -15,42 +18,33 @@ public class PlayCommandImpl implements Command {
      * Plays the songs in the list and prints the current song played.
      *
      * @param audioPlayerController - Current instance of the controller.
-     * * !!! Included Thread.sleep() which may cause problems ....!!!
+     *                              * !!! Included Thread.sleep() which may cause problems ....!!!
      */
     @Override
     public void action(AudioPlayerController audioPlayerController) {
-        int startIndex = audioPlayerController.isPaused ?
-                audioPlayerController.currentSongIndex : INDEX_OF_FIRST_SONG;
+        int startIndex = getStartIndex(audioPlayerController);
 
+        boolean validPlaylist = audioPlayerController.validatePlaylist();
 
-        boolean validPlaylist = audioPlayerController.getAudioPlayer().isPlaylistValid();
         if (!validPlaylist) {
             return;
         }
 
-        if (audioPlayerController.isShufflePressed){
+        if (audioPlayerController.isShufflePressed) {
             startIndex = getRandomSongIndex(audioPlayerController.getPlaylist());
         }
 
         for (; startIndex < audioPlayerController.getCountOfAllListedSongs(); startIndex++) {
+
             audioPlayerController.currentSongIndex = startIndex;
 
-            System.out.print("Now playing: " + (audioPlayerController.currentSongIndex + 1) + "\n\t* ");
-            System.out.println(
-                    audioPlayerController
-                            .getAudioPlayer()
-                            .getPlayList()
-                            .get(
-                                    audioPlayerController.currentSongIndex
-                            ).getShortInfo());
+            Song currentSong = audioPlayerController.getCurrentSong();
 
-            audioPlayerController.songIsPlaying(
-                    audioPlayerController
-                            .getAudioPlayer()
-                            .getPlayList()
-                            .get(
-                                    audioPlayerController.currentSongIndex
-                            ).getTiming());
+            System.out.print("Now playing: " + (audioPlayerController.currentSongIndex + 1) + "\n\t* ");
+
+            System.out.println(currentSong.getShortInfo());
+
+            audioPlayerController.playSong(currentSong.getTiming());
 
             if (audioPlayerController.hasNewInput) {
                 break;
@@ -58,10 +52,32 @@ public class PlayCommandImpl implements Command {
         }
     }
 
+    /**
+     * Provides a check if the audio player has been paused and on that returns the index of the element
+     * at which the pause was called
+     * or the index of the first element of the playlist.
+     * @param audioPlayerController
+     * @return
+     */
+    private int getStartIndex(AudioPlayerController audioPlayerController) {
+        return audioPlayerController.isPaused
+                ? audioPlayerController.currentSongIndex
+                : INDEX_OF_FIRST_SONG;
+    }
+
+    /**
+     * Generate a random int value between 0 and the length of the playlist (exclusively).
+     * @param playlist Used to get the upper bond for the random generator (the size of the collection).
+     * @return A randomly generated int index in the range of the playlist collection.
+     */
     private int getRandomSongIndex(List<Song> playlist) {
         return new Random().nextInt(playlist.size());
     }
 
+    /**
+     *
+     * @return Whether the controller has to execute the play command in the current iteration or not.
+     */
     @Override
     public boolean hasToStartAgain() {
         return false;
