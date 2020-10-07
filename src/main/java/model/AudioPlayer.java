@@ -6,13 +6,26 @@ import java.util.List;
  * This class simulates the behavior/functionality of a real player.
  */
 public class AudioPlayer {
-    private static final String INVALID_PLAY_LIST = "There are no songs to play!";
+    private static final String INVALID_PLAY_LIST = "No playlist provided or the playlist is empty.";
     private static final String SONG_REMOVED_MESSAGE = "Song removed.";
     private static final String NO_SONG_WITH_SUCH_NAME_EXIST_MESSAGE = "There is no song with such name";
-    private final List<Song> playList;
+    private List<Song> playList;
 
     public AudioPlayer(List<Song> playList) {
-        this.playList = playList;
+        validatePlaylist(playList);
+    }
+
+    /**
+     * Initializes the playlist only if valid playlist is provided.
+     * Otherwise throws a CustomException.
+     * @param playList List of Song provided by AudioPlayerController.
+     */
+    private void validatePlaylist(List<Song> playList){
+        if (!isPlaylistValid(playList)){
+            throw new CustomException(INVALID_PLAY_LIST);
+        }else{
+            this.playList = playList;
+        }
     }
 
     /**
@@ -21,12 +34,8 @@ public class AudioPlayer {
      * @return True if valid.
      * False if invalid. Print message to indicate invalid playlist.
      */
-    public boolean isPlaylistValid() {
-        if (playList.isEmpty()) {
-            System.out.println(INVALID_PLAY_LIST);
-            return false;
-        }
-        return true;
+    public boolean isPlaylistValid(List<Song> playList) {
+        return playList != null && !playList.isEmpty();
     }
 
     /**

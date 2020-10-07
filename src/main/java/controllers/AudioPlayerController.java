@@ -133,7 +133,8 @@ public class AudioPlayerController {
      * @param command Enum representation of the user command.
      */
     public void execute(UserCommands command) {
-        availableCommands.get(command).action(this);
+        availableCommands.get(command)
+                .action(this);
     }
 
     /**
@@ -294,7 +295,7 @@ public class AudioPlayerController {
      * @return Gets the result of the validation method from AudioPlayer class
      */
     public boolean validatePlaylist() {
-        return audioPlayer.isPlaylistValid();
+        return audioPlayer.isPlaylistValid(audioPlayer.getPlaylist());
     }
 
     /**
