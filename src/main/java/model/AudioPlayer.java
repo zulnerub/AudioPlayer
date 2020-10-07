@@ -21,7 +21,7 @@ public class AudioPlayer {
      * @param playList List of Song provided by AudioPlayerController.
      */
     private void validatePlaylist(List<Song> playList){
-        if (!isPlaylistValid(playList)){
+        if (playList == null){
             throw new CustomException(INVALID_PLAY_LIST);
         }else{
             this.playList = playList;

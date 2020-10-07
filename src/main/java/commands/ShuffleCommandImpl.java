@@ -14,7 +14,7 @@ public class ShuffleCommandImpl implements Command {
     @Override
     public void action(AudioPlayerController audioPlayerController) {
         audioPlayerController.resetPlaylist();
-        audioPlayerController.isShufflePressed = true;
+        audioPlayerController.isShufflePressed = !audioPlayerController.isShufflePressed;
     }
 
     /**

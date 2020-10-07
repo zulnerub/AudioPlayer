@@ -49,6 +49,10 @@ public class PlayCommandImpl implements Command {
             if (audioPlayerController.hasNewInput) {
                 break;
             }
+
+            if (startIndex == (audioPlayerController.getCountOfAllListedSongs() - 1)){
+                startIndex = -1;
+            }
         }
     }
 
