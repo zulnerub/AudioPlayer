@@ -88,6 +88,8 @@ public class Application {
             System.out.println(exception.getMessage());
         }
 
+        System.out.println("Sample wrong input for validation demonstration purposes:\n");
+
         Song invalidAuthor = null;
         Song invalidGenre = null;
         Song invalidTitle = null;
@@ -117,10 +119,12 @@ public class Application {
             System.out.println(exception.getMessage());
         }
 
+        System.out.println("Adding songs to playlist for demonstration purposes:\n");
+
         System.out.println(audioPlayerController.addSongToPlaylist(getYourFreakOn));
         System.out.println(audioPlayerController.addSongToPlaylist(prituriSaPlaninata));
         System.out.println(audioPlayerController.addSongToPlaylist(bojeChuvajJaOdZlo));
-
+        System.out.println();
     }
 }
 
