@@ -13,7 +13,6 @@ import static model.Genre.*;
  */
 public class Application {
     private static AudioPlayerController audioPlayerController;
-    private static List<Song> songsToBePlayed = new ArrayList<>();
 
     public static void main(String[] args) {
         init();
@@ -26,18 +25,15 @@ public class Application {
         System.out.println(audioPlayerController.getAuthorPositionInPlaylist());
 
         System.out.println("Please input full Author name:");
-
         List<Song> foundSongsOfAuthor = audioPlayerController.getSongsOfAuthor();
 
         if (foundSongsOfAuthor != null && !foundSongsOfAuthor.isEmpty()) {
-            foundSongsOfAuthor.forEach(s -> System.out.println(s.getShortInfo()));
+            foundSongsOfAuthor.forEach(s -> System.out.println(s.getShortInfo() + "\n"));
         } else {
             System.out.println("Author not found.");
         }
 
         System.out.println("There are: " + audioPlayerController.getCountOfAllListedSongs() + " songs in the list.");
-
-        System.out.println(audioPlayerController.removeSongFromPlayList(2));
     }
 
     /**
@@ -46,6 +42,7 @@ public class Application {
      * - enlists songs in the playlist for the AudioPlayer to work with;
      */
     private static void init() {
+        audioPlayerController = new AudioPlayerController();
         Author johnDou = null;
         Author koleKolev = null;
 
@@ -120,10 +117,11 @@ public class Application {
             System.out.println(exception.getMessage());
         }
 
-        System.out.println(songsToBePlayed.add(getYourFreakOn));
-        System.out.println(songsToBePlayed.add(prituriSaPlaninata));
-        System.out.println(songsToBePlayed.add(bojeChuvajJaOdZlo));
+        System.out.println(audioPlayerController.addSongToPlaylist(getYourFreakOn));
+        System.out.println(audioPlayerController.addSongToPlaylist(prituriSaPlaninata));
+        System.out.println(audioPlayerController.addSongToPlaylist(bojeChuvajJaOdZlo));
 
-        audioPlayerController = new AudioPlayerController(songsToBePlayed);
     }
 }
+
+

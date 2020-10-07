@@ -14,13 +14,14 @@ public class PreviousCommandImpl implements Command {
      */
     @Override
     public void action(AudioPlayerController audioPlayerController) {
-        audioPlayerController.resetPlaylist();
-        audioPlayerController.isPaused = true;
+        audioPlayerController.timeTheSongWasPaused = 1;
+        audioPlayerController.hasToSwitchSong = true;
         audioPlayerController.currentSongIndex = getCurrentSongIndex(audioPlayerController);
     }
 
     /**
      * Calculates the index of the current song that is played.
+     *
      * @param audioPlayerController The controller that provides access to the current song.
      * @return The index of the current song based on the current state of the audio player.
      */
@@ -31,7 +32,6 @@ public class PreviousCommandImpl implements Command {
     }
 
     /**
-     *
      * @return Whether the controller has to execute the play command in the current iteration or not.
      */
     @Override

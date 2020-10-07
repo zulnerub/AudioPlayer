@@ -20,26 +20,32 @@ import static model.UserCommands.*;
  */
 public class AudioPlayerController {
     private static final String SINGER_NOT_FOUND_MESSAGE = "Singer not found!";
+    private static final String INTERRUPTED_WHILE_THREAD_WAS_SLEEPING_MESSAGE = "Interrupted while playing song at Thread.sleep().";
+    private static final String BUFFERED_READER_NOT_READY_MESSAGE = "BufferedReader was not ready.";
     private static final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-    private AudioPlayer audioPlayer;
-    private Map<UserCommands, Command> availableCommands = new LinkedHashMap<>();
-    public String userInput;
+    private static final int DEFAULT_STARTING_POSITION_FOR_SONG = 1;
+    private static final int DEFAULT_STARTING_INDEX_OF_PLAYLIST = 0;
+    private static final String INVALID_USER_INPUT_MESSAGE = "Invalid input.";
+    private static final String WRONG_TITLE_INPUT_MESSAGE = "The searched title must not be empty or blank.";
+    private static final String ENTER_SONGS_TITLE_TO_BE_REMOVED_MESSAGE = "Please enter a title of the song to be removed:";
+    private AudioPlayer audioPlayer = new AudioPlayer(new ArrayList<>());
+    private final Map<UserCommands, Command> availableCommands = new LinkedHashMap<>();
+    private String userInput;
+    public int timeTheSongWasPaused;
+    public int currentSongIndex;
     public boolean isPaused = false;
-    public boolean hasNewInput = false;
     public boolean isShufflePressed = false;
-    public int currentSongIndex = 0;
-    public int timeTheSongWasPaused = 0;
+    public boolean hasToSwitchSong = false;
+    public boolean hasNewInput = false;
 
-    public AudioPlayerController(List<Song> playlist) {
-        this.audioPlayer = new AudioPlayer(playlist);
-        availableCommands.put(PLAY, new PlayCommandImpl());
-        availableCommands.put(STOP, new StopCommandImpl());
-        availableCommands.put(PAUSE, new PauseCommandImpl());
-        availableCommands.put(NEXT, new NextCommandImpl());
-        availableCommands.put(PREVIOUS, new PreviousCommandImpl());
-        availableCommands.put(SHUFFLE, new ShuffleCommandImpl());
+    public AudioPlayerController() {
+        initializeAvailableCommands();
     }
 
+    /**
+     * Brings the audioPlayerController to active state,
+     * ready to accept user input.
+     */
     public void start() {
         System.out.println(getListOfCommands());
 
@@ -76,13 +82,17 @@ public class AudioPlayerController {
             isPaused = false;
         }
 
+        if (hasToSwitchSong) {
+            hasToSwitchSong = false;
+        }
+
         for (; startSongFromTime <= timing; startSongFromTime++) {
             System.out.println(startSongFromTime);
 
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new CustomException(INTERRUPTED_WHILE_THREAD_WAS_SLEEPING_MESSAGE);
             }
 
             try {
@@ -93,17 +103,9 @@ public class AudioPlayerController {
                     }
                 }
             } catch (IOException exception) {
-                throw new CustomException("BufferedReader was not ready.");
+                throw new CustomException(BUFFERED_READER_NOT_READY_MESSAGE);
             }
         }
-    }
-
-    /**
-     *
-     * @return String representation of basic info for AudioPlayer class.
-     */
-    public String getAudioPlayerInfo() {
-        return audioPlayer.info();
     }
 
     /**
@@ -113,22 +115,72 @@ public class AudioPlayerController {
     public void resetPlaylist() {
         isPaused = false;
         isShufflePressed = false;
-        timeTheSongWasPaused = 1;
-        currentSongIndex = 0;
+        hasToSwitchSong = false;
+        timeTheSongWasPaused = DEFAULT_STARTING_POSITION_FOR_SONG;
+        currentSongIndex = DEFAULT_STARTING_INDEX_OF_PLAYLIST;
     }
 
     /**
-     * Handles provided input from the user.
-     *
-     * @return The input of the user.
-     * @throws CustomException - In relation to BufferedReader.
+     * @return String representation of basic info for AudioPlayer class.
      */
-    private String getUserInput() {
-        try {
-            return bufferedReader.readLine().trim();
-        } catch (IOException exception) {
-            throw new CustomException("Invalid input.");
+    public String getAudioPlayerInfo() {
+        return audioPlayer.info();
+    }
+
+    /**
+     * Gets the user input and calls the corresponding command on the audio player.
+     *
+     * @param command Enum representation of the user command.
+     */
+    public void execute(UserCommands command) {
+        availableCommands.get(command).action(this);
+    }
+
+    /**
+     * @return Gets the song currently being played.
+     */
+    public Song getCurrentSong() {
+        return audioPlayer.getPlaylist().get(currentSongIndex);
+    }
+
+    /**
+     * @return Fetches the audio player's playlist.
+     */
+    public List<Song> getPlaylist() {
+        return audioPlayer.getPlaylist();
+    }
+
+    /**
+     * @return Gets the current number of objects in the playlist.
+     */
+    public int getCountOfAllListedSongs() {
+        return audioPlayer.getPlaylist().size();
+    }
+
+    /**
+     * Calls the method of the audio player to remove a song from the playlist.
+     *
+     * @return Message whether the song was removed ot not.
+     */
+    public String removeSongFromPlaylist() {
+        System.out.println(ENTER_SONGS_TITLE_TO_BE_REMOVED_MESSAGE);
+
+        String title = getUserInput();
+
+        if (title.isBlank()) {
+            return WRONG_TITLE_INPUT_MESSAGE;
         }
+        return audioPlayer.removeSongFromPlayList(title);
+    }
+
+    /**
+     * Calls the method of the audio player to add a song to the playlist.
+     *
+     * @param song Object of class Song to be added to the playlist of the audio player.
+     * @return String representation whether the command was executed or not.
+     */
+    public String addSongToPlaylist(Song song) {
+        return audioPlayer.addSongToPlaylist(song);
     }
 
     /**
@@ -139,7 +191,7 @@ public class AudioPlayerController {
     private boolean isInputValid() {
         String consoleInput = getUserInput();
 
-        if (consoleInput != null && !consoleInput.isBlank()) {
+        if (!consoleInput.isBlank()) {
             boolean isCommandValid = Arrays.stream(UserCommands.values())
                     .map(UserCommands::getSimpleName)
                     .collect(Collectors.toList())
@@ -155,67 +207,16 @@ public class AudioPlayerController {
     }
 
     /**
-     * Gets the user input and calls the corresponding command on the audio player.
+     * Handles provided input from the user.
      *
-     * @param command Enum representetion of the user command.
+     * @return The input of the user.
+     * @throws CustomException - In relation to BufferedReader.
      */
-    public void execute(UserCommands command) {
-        availableCommands.get(command).action(this);
-
-        if (command.equals(SHUFFLE) || command.equals(PREVIOUS) || command.equals(NEXT)) {
-            availableCommands.get(PLAY).action(this);
-        }
-    }
-
-    public AudioPlayer getAudioPlayer() {
-        return audioPlayer;
-    }
-
-    /**
-     *
-     * @return Gets the song currently being played.
-     */
-    public Song getCurrentSong(){
-        return audioPlayer.getPlayList().get(currentSongIndex);
-    }
-
-    public List<Song> getPlaylist(){
-        return audioPlayer.getPlayList();
-    }
-
-    /**
-     * @return Gets the current number of objects in the playlist.
-     */
-    public int getCountOfAllListedSongs() {
-        return audioPlayer.getPlayList().size();
-    }
-
-    /**
-     * Removes from the playlist a song by its index.
-     *
-     * @param index Index of the song to remove.
-     * @return String statement if song was removed or not.
-     */
-    public String removeSongFromPlayList(int index) {
-        if (index >= 0 && index < getPlaylist().size()) {
-            getPlaylist().remove(index);
-            return "Song removed.";
-        }
-
-        return "Provided index is not valid. Please add valid index.";
-    }
-
-    /**
-     * Validating the song and enlist it to playlist.
-     *
-     * @param song Object of type song to be added to the current instance of the playlist.
-     */
-    public String addSongToPlaylist(Song song) {
-        if (song != null) {
-            getPlaylist().add(song);
-            return "Song: " + song.getTitle() + " added to playlist.";
-        } else {
-            return "Song not added.";
+    private String getUserInput() {
+        try {
+            return bufferedReader.readLine().trim();
+        } catch (IOException exception) {
+            throw new CustomException(INVALID_USER_INPUT_MESSAGE);
         }
     }
 
@@ -229,22 +230,6 @@ public class AudioPlayerController {
         } else {
             hasNewInput = false;
         }
-    }
-
-    /**
-     * Provides string representation of the users options to the user.
-     *
-     * @return - String representation of the available commands.
-     */
-    private String getListOfCommands() {
-        return "Hello. Please chose a command from the following:\n" +
-                "\t 1 \t" + PLAY + "\n" +
-                "\t 2 \t" + STOP + "\n" +
-                "\t 3 \t" + PAUSE + "\n" +
-                "\t 4 \t" + NEXT + "\n" +
-                "\t 5 \t" + PREVIOUS + "\n" +
-                "\t 6 \t" + SHUFFLE + "\n" +
-                "\t 7 \t" + EXIT + "\n";
     }
 
     /**
@@ -267,7 +252,9 @@ public class AudioPlayerController {
      */
     public String getAuthorPositionInPlaylist() {
         String songTitle = getUserInput();
+
         String singerName;
+
         int songIndex;
 
         Optional<Song> foundSong = getPlaylist().stream()
@@ -293,17 +280,50 @@ public class AudioPlayerController {
      */
     public List<Song> getSongsOfAuthor() {
         String authorName = getUserInput();
-        return audioPlayer.getPlayList()
+
+        return audioPlayer.getPlaylist()
                 .stream()
-                .filter(song -> song.getAuthor().getName().contains(authorName))
+                .filter(song ->
+                        song.getAuthor()
+                                .getName().toLowerCase()
+                                .contains(authorName.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     /**
-     *
      * @return Gets the result of the validation method from AudioPlayer class
      */
     public boolean validatePlaylist() {
         return audioPlayer.isPlaylistValid();
+    }
+
+    /**
+     * Provides string representation of the users options to the user.
+     *
+     * @return - String representation of the available commands.
+     */
+    private String getListOfCommands() {
+        return "Hello. Please chose a command from the following:\n" +
+                "\t 1 \t" + PLAY + "\n" +
+                "\t 2 \t" + STOP + "\n" +
+                "\t 3 \t" + PAUSE + "\n" +
+                "\t 4 \t" + NEXT + "\n" +
+                "\t 5 \t" + PREVIOUS + "\n" +
+                "\t 6 \t" + SHUFFLE + "\n" +
+                "\t 7 \t" + REMOVE + "\n" +
+                "\t 8 \t" + EXIT + "\n";
+    }
+
+    /**
+     * Use to populate the map with the audio player's commands.
+     */
+    private void initializeAvailableCommands() {
+        availableCommands.put(PLAY, new PlayCommandImpl());
+        availableCommands.put(STOP, new StopCommandImpl());
+        availableCommands.put(PAUSE, new PauseCommandImpl());
+        availableCommands.put(NEXT, new NextCommandImpl());
+        availableCommands.put(PREVIOUS, new PreviousCommandImpl());
+        availableCommands.put(SHUFFLE, new ShuffleCommandImpl());
+        availableCommands.put(REMOVE, new RemoveSongCommand());
     }
 }

@@ -10,6 +10,7 @@ public enum UserCommands {
     NEXT("next"),
     PREVIOUS("previous"),
     SHUFFLE("shuffle"),
+    REMOVE("remove"),
     EXIT("exit");
 
     private final String name;

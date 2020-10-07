@@ -56,17 +56,19 @@ public class PlayCommandImpl implements Command {
      * Provides a check if the audio player has been paused and on that returns the index of the element
      * at which the pause was called
      * or the index of the first element of the playlist.
-     * @param audioPlayerController
-     * @return
+     *
+     * @param audioPlayerController Instance of the AudioPlayerController
+     * @return An integer which is the index from which to start playing the songs.
      */
     private int getStartIndex(AudioPlayerController audioPlayerController) {
-        return audioPlayerController.isPaused
+        return audioPlayerController.isPaused || audioPlayerController.hasToSwitchSong
                 ? audioPlayerController.currentSongIndex
                 : INDEX_OF_FIRST_SONG;
     }
 
     /**
      * Generate a random int value between 0 and the length of the playlist (exclusively).
+     *
      * @param playlist Used to get the upper bond for the random generator (the size of the collection).
      * @return A randomly generated int index in the range of the playlist collection.
      */
@@ -75,7 +77,6 @@ public class PlayCommandImpl implements Command {
     }
 
     /**
-     *
      * @return Whether the controller has to execute the play command in the current iteration or not.
      */
     @Override

@@ -18,7 +18,6 @@ public class ShuffleCommandImpl implements Command {
     }
 
     /**
-     *
      * @return Whether the controller has to execute the play command in the current iteration or not.
      */
     @Override
