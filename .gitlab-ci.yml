@@ -42,11 +42,13 @@ variables:
 
 maven_unit_test:
   stage: test
+  image: maven:3.8.4  # Specify the Maven Docker image
   script:
     - mvn $MAVEN_CLI_OPTS clean test
 
 maven_integration_test:
   stage: test
+  image: maven:3.8.4  # Specify the Maven Docker image
   script:
     - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests
 
