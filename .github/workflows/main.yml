@@ -95,4 +95,4 @@ jobs:
       - name: Deploy to Production
         run: |
           echo "Deploying application..."
-          docker run -d -p 8080:80 "ghcr.io/yourgithubusername/myapp:AudioPlayer"
+          docker run -d -p 8080:80 "ghcr.io/zulnerub/audioplayer:AudioPlayer"
