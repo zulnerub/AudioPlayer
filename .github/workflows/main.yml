@@ -22,7 +22,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: jars
-          path: $GITHUB_WORKSPACE/artifacts
+          path: target/
 
   test:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: jars
-          path: $GITHUB_WORKSPACE/artifacts
+          path: target/
 
       - name: Set up QEMU for cross-platform builds
         uses: docker/setup-qemu-action@v2
@@ -84,7 +84,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: jars
-          path: $GITHUB_WORKSPACE/artifacts
+          path: target/
 
       - name: Set up Docker
         uses: actions/setup-docker@v2
