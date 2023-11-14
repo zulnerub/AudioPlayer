@@ -46,7 +46,7 @@ maven_unit_test:
   script:
     - mvn $MAVEN_CLI_OPTS clean test -Dspring.profiles.active=unittest
   dependencies:
-    - build_job
+    - build-job
 
 maven_integration_test:
   stage: test
@@ -54,7 +54,7 @@ maven_integration_test:
   script:
     - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests -Dspring.profiles.active=unittest
   dependencies:
-    - build_job
+    - build-job
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
