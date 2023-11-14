@@ -34,7 +34,23 @@ build_jar:
     paths:
       - target/*.jar
 
-build-job:       # This job runs in the build stage, which runs first.
+maven_unit_test:
+  stage: test
+  image: maven:3.6.3  # Specify the Maven Docker image
+  script:
+    - mvn $MAVEN_CLI_OPTS clean test -Dspring.profiles.active=unittest
+  dependencies:
+    - build_jar
+
+maven_integration_test:
+  stage: test
+  image: maven:3.6.3  # Specify the Maven Docker image
+  script:
+    - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests -Dspring.profiles.active=unittest
+  dependencies:
+    - build_jar
+
+build-docker-image:       # This job runs in the build stage, which runs first.
   stage: build
   image: docker:20
   services:
@@ -47,22 +63,6 @@ build-job:       # This job runs in the build stage, which runs first.
     - docker build --pull -t "$CI_REGISTRY_IMAGE:AudioPlayer" .
   after_script:
     - docker push "$CI_REGISTRY_IMAGE:AudioPlayer"
-
-maven_unit_test:
-  stage: test
-  image: maven:3.6.3  # Specify the Maven Docker image
-  script:
-    - mvn $MAVEN_CLI_OPTS clean test -Dspring.profiles.active=unittest
-  dependencies:
-    - build-job
-
-maven_integration_test:
-  stage: test
-  image: maven:3.6.3  # Specify the Maven Docker image
-  script:
-    - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests -Dspring.profiles.active=unittest
-  dependencies:
-    - build-job
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
