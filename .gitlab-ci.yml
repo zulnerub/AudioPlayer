@@ -33,7 +33,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo "Compiling the code..."
     - echo "Compile complete."
     - echo "Nikva ne ga wyr[im ti kazwam"
-    - docker build -t "$CI_REGISTRY_IMAGE:AudioPlayer" .
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:AudioPlayer" .
   after_script:
     - docker push "$CI_REGISTRY_IMAGE:AudioPlayer"
 
