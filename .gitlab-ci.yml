@@ -17,9 +17,22 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
+  - compile
   - build
   - test
   - deploy
+
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+build_jar:
+  stage: compile
+  image: maven:3.6-jdk-11
+  script:
+    - mvn $MAVEN_CLI_OPTS clean install -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
@@ -31,14 +44,9 @@ build-job:       # This job runs in the build stage, which runs first.
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "Compiling the code..."
-    - echo "Compile complete."
-    - echo "Nikva ne ga wyr[im ti kazwam"
     - docker build --pull -t "$CI_REGISTRY_IMAGE:AudioPlayer" .
   after_script:
     - docker push "$CI_REGISTRY_IMAGE:AudioPlayer"
-
-variables:
-  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
 maven_unit_test:
   stage: test
