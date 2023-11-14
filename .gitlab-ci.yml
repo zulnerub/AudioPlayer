@@ -37,6 +37,19 @@ build-job:       # This job runs in the build stage, which runs first.
   after_script:
     - docker push "$CI_REGISTRY_IMAGE:AudioPlayer"
 
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+maven_unit_test:
+  stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS clean test
+
+maven_integration_test:
+  stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests
+
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
