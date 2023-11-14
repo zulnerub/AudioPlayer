@@ -44,13 +44,13 @@ maven_unit_test:
   stage: test
   image: maven:3.8.4  # Specify the Maven Docker image
   script:
-    - mvn $MAVEN_CLI_OPTS clean test
+    - mvn $MAVEN_CLI_OPTS clean test -Dspring.profiles.active=unittest
 
 maven_integration_test:
   stage: test
   image: maven:3.8.4  # Specify the Maven Docker image
   script:
-    - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests
+    - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests -Dspring.profiles.active=unittest
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -62,6 +62,6 @@ deploy-job:      # This job runs in the deploy stage.
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "Deploying application..."
-    - echo "Application successfully deployed. "
+    - echo "eu.deltasource.Application successfully deployed. "
     - echo "Da si ebe drobo maj se rynna"
     - docker run -d -p 8080:80 "$CI_REGISTRY_IMAGE:AudioPlayer"
