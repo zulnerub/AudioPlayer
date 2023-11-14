@@ -69,7 +69,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           echo "Compiling the code..."
-          docker build --pull -t "$DOCKER_REGISTRY_IMAGE:AudioPlayer" .
+          docker build --pull -t "ghcr.io/zulnerub/AudioPlayer:AudioPlayer" .
           echo "Pushing Docker image..."
           docker push "$DOCKER_REGISTRY_IMAGE:AudioPlayer"
 
@@ -95,4 +95,4 @@ jobs:
       - name: Deploy to Production
         run: |
           echo "Deploying application..."
-          docker run -d -p 8080:80 "$DOCKER_REGISTRY_IMAGE:AudioPlayer"
+          docker run -d -p 8080:80 "ghcr.io/yourgithubusername/myapp:AudioPlayer"
