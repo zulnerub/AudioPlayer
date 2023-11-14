@@ -69,9 +69,9 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           echo "Compiling the code..."
-          docker build --pull -t "ghcr.io/zulnerub/AudioPlayer:AudioPlayer" .
+          docker build --pull -t "ghcr.io/zulnerub/audioplayer:AudioPlayer" .
           echo "Pushing Docker image..."
-          docker push "$DOCKER_REGISTRY_IMAGE:AudioPlayer"
+          docker push "ghcr.io/zulnerub/audioplayer:AudioPlayer"
 
   deploy:
     runs-on: ubuntu-latest
