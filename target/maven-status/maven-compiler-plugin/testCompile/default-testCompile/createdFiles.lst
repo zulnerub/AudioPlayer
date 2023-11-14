@@ -1,3 +1,6 @@
-AuthorClassUnitTests.class
-CucumberIT.class
-SongClassUnitTests.class
+eu/deltasource/AudioPlayer/steps/CucumberConfiguration.class
+eu/deltasource/AudioPlayer/AuthorClassUnitTests.class
+eu/deltasource/AudioPlayer/steps/SampleStepDefinitions.class
+eu/deltasource/AudioPlayer/SongClassUnitTests.class
+eu/deltasource/AudioPlayer/CucumberIT.class
+eu/deltasource/AudioPlayer/ApplicationTestConfiguration.class
