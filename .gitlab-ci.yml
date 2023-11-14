@@ -18,8 +18,8 @@
 
 stages:          # List of stages for jobs, and their order of execution
   - compile
-  - build
   - test
+  - build
   - deploy
 
 variables:
@@ -74,6 +74,4 @@ deploy-job:      # This job runs in the deploy stage.
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo "Deploying application..."
-    - echo "eu.deltasource.Application successfully deployed. "
-    - echo "Da si ebe drobo maj se rynna"
     - docker run -d -p 8080:80 "$CI_REGISTRY_IMAGE:AudioPlayer"
