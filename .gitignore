@@ -1,2 +1,19 @@
-**/.idea/
-**/*.class
+# Maven
+target/
+
+# OSX
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Eclipse
+.project
+.metadata
+.classpath
+.settings/
+*.launch
+
+# IntelliJ
+.idea/
+*.iml
