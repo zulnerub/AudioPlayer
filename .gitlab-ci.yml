@@ -45,12 +45,16 @@ maven_unit_test:
   image: maven:3.6.3  # Specify the Maven Docker image
   script:
     - mvn $MAVEN_CLI_OPTS clean test -Dspring.profiles.active=unittest
+  dependencies:
+    - build_job
 
 maven_integration_test:
   stage: test
   image: maven:3.6.3  # Specify the Maven Docker image
   script:
     - mvn $MAVEN_CLI_OPTS clean verify -Pintegration-tests -Dspring.profiles.active=unittest
+  dependencies:
+    - build_job
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
